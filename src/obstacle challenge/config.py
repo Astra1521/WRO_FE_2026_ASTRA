@@ -1,0 +1,136 @@
+import numpy as np
+
+# ==========================================
+# Hardware Configuration (Servo)
+# ==========================================
+SERVO_PWM_CHANNEL = 0
+SERVO_FREQUENCY = 50
+SERVO_MIN_US = 500
+SERVO_MAX_US = 2400
+SERVO_MIN = 50
+SERVO_CENTER = 95
+SERVO_MAX = 140
+
+# Original fallback servo limits (retained for compatibility)
+CALIBRATED_MIN_PW_S = 0.001
+CALIBRATED_MAX_PW_S = 0.002
+CALIBRATED_ANGLE_MIN = 45.0
+CALIBRATED_ANGLE_MAX = 135.0
+INPUT_ANGLE_MIN_SERVO = -45.0
+INPUT_ANGLE_MAX_SERVO = 45.0
+SAFETY_MIN_PW_S = 0.001
+SAFETY_MAX_PW_S = 0.0021
+SERVO_PWM_PERIOD_S = 1.0 / SERVO_FREQUENCY
+
+# ==========================================
+# Hardware Configuration (Motor)
+# ==========================================
+MOTOR_PWM_CHANNEL = 0
+MOTOR_IN1_CHANNEL = 2
+MOTOR_IN2_CHANNEL = 1
+MOTOR_PWM_FREQUENCY = 1000
+STBY_PIN = 6
+
+OPEN_BASE_SPEED = 50
+OBS_BASE_SPEED = 85
+MAX_SPEED = 95
+CORNERING_SPEED = 30
+DODGE_SPEED = 30
+DRIVE_SPEED = 100.0  # Retained from original config
+
+# ==========================================
+# MUX & TOF Sensor Configuration
+# ==========================================
+MUX_ADDR = 0x70
+LEFT_CHANNEL = 5
+FRONT_CHANNEL = 3
+RIGHT_CHANNEL = 2
+GYRO_CHANNEL = 4
+
+TOF_ENABLED = True
+TOF_CHANNELS_TO_USE = range(1,4)
+TOF_FORWARD_SENSOR_CHANNEL = 1
+TOF_CORNERING_THRESHOLD_MM = 240
+TOF_OBSTACLE_THRESHOLD_MM = 100
+
+# ==========================================
+# Gyroscope & Steering Variables
+# ==========================================
+GYRO_ENABLED = True
+GYRO_KP = 0.5
+HEADING_LOCK_TOLERANCE = 5.0
+TILT_THRESHOLD_DEGREES = 15.0
+
+MAX_CENTERING_ANGLE = 25
+KP_CENTERING = 0.05
+KP_STEERING = 0.3
+WALL_FOLLOW_KP = 0.2
+
+AVOIDANCE_OFFSET = 300
+SAFE_RED_X_MAX = 200         
+SAFE_GREEN_X_MIN = 440       
+
+# ==========================================
+# Camera & Vision Settings
+# ==========================================
+FRAME_WIDTH = 640
+FRAME_HEIGHT = 480
+MAX_FPS = 30
+CROP_TOP_FRAC = 5 / 12
+CROP_BOTTOM_FRAC = 0
+
+MIN_CONTOUR_AREA = 2500
+MAX_BLOCK_AREA_FRACTION = 0.25
+MIN_BLOCK_AREA_FOR_ACTION = 7500 
+MIN_BLOCK_ROI_OVERLAP = 0.50
+
+BOX_COLOR_RED = (0, 0, 255)
+BOX_COLOR_GREEN = (0, 255, 0)
+BOX_COLOR_ROI = (255, 0, 255)
+
+# HSV Color Thresholds
+LOWER_RED_1 = np.array([0, 150, 40])
+UPPER_RED_1 = np.array([10, 255, 200])
+LOWER_RED_2 = np.array([175, 150, 40])
+UPPER_RED_2 = np.array([180, 255, 200])
+
+LOWER_GREEN = np.array([36, 50, 35])
+UPPER_GREEN = np.array([89, 255, 130])
+
+ORANGE_LOWER = np.array([6, 70, 20])				
+ORANGE_UPPER = np.array([26, 255, 255])				
+
+BLUE_LOWER = np.array([94, 45, 58])					
+BLUE_UPPER = np.array([140, 226, 185])	
+
+# ==========================================
+# Dynamic Flow & Maneuver Variables
+# ==========================================
+TOTAL_TURNS = 12
+TOTAL_CORNERS = 12           
+LOOP_DELAY = 0.03
+MIN_FRAMES_IN_TURN = 30      
+
+EMERGENCY_STOP_DISTANCE = 50
+FRONT_DODGE_THRESHOLD = 50
+MIN_WALL_DIST_MM = 150       
+TOF_BLOCK_CLEARED_MM = 400   
+
+CORNER_AREA_THRESHOLD = 5000  
+CORNER_COOLDOWN = 2.0         
+CORNER_SPEED = 30             
+
+MANEUVER_ANGLE_DEG = 45.0
+MANEUVER_DRIVE_FRAMES_SIDEWAYS = 10
+MANEUVER_DRIVE_FRAMES_STRAIGHT = 0
+SPECIAL_TURN_SIDEWAYS_FRAMES = 0
+
+CCW_TURN_ANGLE = 90.0
+CCW_SCAN_ANGLE = 60.0
+CCW_NORMAL_DRIVE_FRAMES = 25
+CCW_REVERSE_FRAMES = 10
+CCW_SHORT_DRIVE_FRAMES = 0
+
+CW_DRIVE_FORWARD_RED_FRAMES = 25
+CW_REVERSE_GREEN_FRAMES = 15
+CW_DRIVE_FORWARD_NONE_FRAMES = 0
