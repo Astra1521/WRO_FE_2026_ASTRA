@@ -110,6 +110,40 @@ The mechanical platform was designed to remain compact while providing enough sp
 The modular design also allows individual components to be removed, adjusted or replaced without rebuilding the complete robot.
 
 ---
+# Performance Videos
+
+The following videos demonstrate NEO operating autonomously during the two WRO Future Engineers challenges.
+
+## Open Challenge
+
+The Open Challenge demonstrates NEO's ability to autonomously navigate the track and complete the required laps without manual control.
+
+<!-- ADD FINAL OPEN CHALLENGE VIDEO LINK HERE -->
+
+[Watch NEO — Open Challenge](ADD-LINK-HERE)
+
+---
+
+## Obstacle Challenge
+
+The Obstacle Challenge demonstrates NEO's autonomous navigation while detecting and responding to obstacles using its camera, distance sensors and control system.
+
+<!-- ADD FINAL OBSTACLE CHALLENGE VIDEO LINK HERE -->
+
+[Watch NEO — Obstacle Challenge](ADD-LINK-HERE)
+
+---
+
+## Current Performance
+
+| Test | Result |
+|---|---|
+| Recorded Lap Time | Approximately 8.7 seconds |
+| Open Challenge | Final video to be added |
+| Obstacle Challenge | Final video to be added |
+
+The final competition videos will be added after NEO's camera system, autonomous software and competition configuration are fully completed.
+— - -
 
 ## Repository Contents
 
