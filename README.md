@@ -1,7 +1,8 @@
 # TEAM ASTRA — WRO FUTURE ENGINEERS 2026
 
 <p align="center">
-  <img src="images/team/astra-logo.png" width="350">
+  <img width="1227" height="1281" alt="F2DF74DD-A730-47C6-89DE-0BBC2A05D6F1" src="https://github.com/user-attachments/assets/e0de9b6c-283e-4a41-941f-7965bcdf1862" />
+
 </p>
 
 <p align="center">
@@ -27,7 +28,11 @@ Our team brings together experience in autonomous robotics, programming, mechani
 **Team Mentor:** Mr. Paresh Gambhava
 
 <p align="center">
-  <img src="images/team/team-astra.jpg" width="700">
+  <img width="1000" height="900" alt="Meet_The_Team_Astra_WRO" src="https://github.com/user-attachments/assets/3926c1bf-77f9-4632-a04f-25f8d6fe8b18" />
+  <img width="1672" height="940" alt="36C0BAF1-CC30-4925-941E-BB4F85F5DA72" src="https://github.com/user-attachments/assets/9ce060ad-fa69-4f17-b778-96658c0b2662" />
+  
+
+
 </p>
 
 ---
@@ -35,7 +40,10 @@ Our team brings together experience in autonomous robotics, programming, mechani
 ## Our Robot — NEO
 
 <p align="center">
-  <img src="images/robot/neo-hero.jpg" width="700">
+  
+<img width="900" height="900" alt="Neo_Rotating_Robot_10MB" src="https://github.com/user-attachments/assets/5bdba160-a6bc-4c59-a5e1-105b41ca154e" />
+
+
 </p>
 
 **NEO** is Team Astra's autonomous vehicle for WRO Future Engineers 2026.
@@ -76,22 +84,21 @@ A **Raspberry Pi 5** acts as the main processing unit and is designed to process
 | 3D Printer | Bambu Lab A1 |
 | Recorded Lap Time | Approximately 8.7 seconds |
 
-\*Weight is currently an estimate and will be updated after final measurement.
 
 ---
 
 ## Robot Views
 
+
+
 | Front | Rear | Left |
-|---|---|---|
-| ![NEO Front](images/robot/neo-front.jpg) | ![NEO Rear](images/robot/neo-rear.jpg) | ![NEO Left](images/robot/neo-left.jpg) |
+|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/08a80e9d-fb54-4c7f-a078-1f7dcefe13ed" width="300" alt="NEO Front View"> | <img src="https://github.com/user-attachments/assets/c562da21-df0f-404e-8824-0cfd6bfd905d" width="300" alt="NEO Rear View"> | <img src="https://github.com/user-attachments/assets/da662955-3f9c-422a-923d-9d184cdc3dea" width="300" alt="NEO Left View"> |
+
 
 | Right | Top | Bottom |
-|---|---|---|
-| ![NEO Right](images/robot/neo-right.jpg) | ![NEO Top](images/robot/neo-top.jpg) | ![NEO Bottom](images/robot/neo-bottom.jpg) |
-
-
-
+|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="300" alt="NEO Right View"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="300" alt="NEO Top View"> | <img src="https://github.com/user-attachments/assets/aaeaf496d-b2a5-42ed-ba7c-49e77e4dc778" width="300" alt="NEO Bottom View"> |
 ---
 
 ## Project Overview
@@ -118,9 +125,9 @@ The following videos demonstrate NEO operating autonomously during the two WRO F
 
 The Open Challenge demonstrates NEO's ability to autonomously navigate the track and complete the required laps without manual control.
 
-<!-- ADD FINAL OPEN CHALLENGE VIDEO LINK HERE -->
+<!-- ADD FINAL OPEN CHALLENGE VIDEO LINK HERE --> https://youtu.be/b3JmTygBYIU
 
-[Watch NEO — Open Challenge](ADD-LINK-HERE)
+[Watch NEO — Open Challenge](https://youtu.be/b3JmTygBYIU)
 
 ---
 
@@ -128,9 +135,9 @@ The Open Challenge demonstrates NEO's ability to autonomously navigate the track
 
 The Obstacle Challenge demonstrates NEO's autonomous navigation while detecting and responding to obstacles using its camera, distance sensors and control system.
 
-<!-- ADD FINAL OBSTACLE CHALLENGE VIDEO LINK HERE -->
+<!-- ADD FINAL OBSTACLE CHALLENGE VIDEO LINK HERE --> https://youtu.be/H_eWYqw8Qmo
 
-[Watch NEO — Obstacle Challenge](ADD-LINK-HERE)
+[Watch NEO — Obstacle Challenge](https://youtu.be/H_eWYqw8Qmo)
 
 ---
 
@@ -215,7 +222,8 @@ Using rear-wheel drive separates propulsion from steering:
 This simplifies the mechanical architecture and allows the front steering system to operate independently from the driven axle.
 
 <p align="center">
-  <img src="images/mobility/drivetrain.jpg" width="650">
+  <img width="1254" height="1254" alt="8566F48C-61DC-49B7-946C-DE57FBDC2CD8" src="https://github.com/user-attachments/assets/f79cd400-57fb-43ff-8dca-d6b8f8509f4e" />
+
 </p>
 
 [More information on NEO's drivetrain](mobility/drivetrain.md)
@@ -254,7 +262,8 @@ This helps:
 - produce smoother movement through turns
 
 <p align="center">
-  <img src="images/mobility/differential.jpg" width="550">
+  <img width="1448" height="1086" alt="427709E7-388B-4B78-972B-85C9B4CD5CA6" src="https://github.com/user-attachments/assets/a54e40ec-59cf-4103-bcb8-5be967c57c24" />
+
 </p>
 
 [More information on NEO's drivetrain](mobility/drivetrain.md)
@@ -276,10 +285,10 @@ The current observed physical steering range is approximately:
 | Left | ~60° |
 | Right | Slightly above 45° |
 
-These values are currently approximate and will be replaced with measured values after final steering calibration.
 
 <p align="center">
-  <img src="images/mobility/steering.jpg" width="600">
+  <img width="2103" height="748" alt="0D347FA7-6790-46BC-A74D-A841D161BEE1" src="https://github.com/user-attachments/assets/40849f92-d549-40b3-adbf-586cf9e150df" />
+
 </p>
 
 [More information on NEO's steering system](mobility/steering.md)
@@ -355,9 +364,7 @@ These values are **theoretical estimates** based on the calculated travel distan
 
 They are therefore documented separately from NEO's experimentally observed lap time.
 
-<p align="center">
-  <img src="images/calculations/mobility-calculations.jpg" width="650">
-</p>
+
 
 [View full engineering calculations](mobility/calculations.md)
 
@@ -404,9 +411,7 @@ The six custom parts are:
 | Camera Stand V2 | Earlier version of the elevated camera-support structure |
 | Camera Stand V3 | Refined version of the camera-support structure |
 
-<p align="center">
-  <img src="images/3d-printing/all-parts.jpg" width="700">
-</p>
+
 
 [View all 3D-printed parts and files](3d-models/README.md)
 
@@ -434,7 +439,7 @@ The overall concept was retained while the geometry was refined, allowing the ca
 
 | Camera Stand V2 | Camera Stand V3 |
 |---|---|
-| ![Camera Stand V2](images/3d-printing/camera-stand-v2.png) | ![Camera Stand V3](images/3d-printing/camera-stand-v3.png) |
+
 
 [View camera stand iterations](3d-models/README.md)
 
@@ -455,9 +460,6 @@ The front-centre sensor is positioned approximately along the centreline of the 
 
 The left and right sensors provide additional information around the front of NEO, while the rear sensor provides information behind the vehicle.
 
-<p align="center">
-  <img src="images/mobility/sensor-layout.jpg" width="650">
-</p>
 
 [View detailed sensor placement](hardware/sensors.md)
 
@@ -519,8 +521,9 @@ The overall architecture can be represented as:
 **NEO's Movement**
 
 <p align="center">
-  <img src="images/hardware/hardware-architecture.png" width="750">
-</p>
+<img width="1536" height="1024" alt="IMG_2407" src="https://github.com/user-attachments/assets/684f0397-d396-4e48-9a4c-e5d33502d106" />
+
+  </p>
 
 [View full hardware architecture](hardware/hardware-architecture.md)
 
@@ -554,9 +557,7 @@ It also provides strong compatibility with **Python and OpenCV**, which are used
 | Autonomous Control | Can process sensing and decision-making on one platform |
 | Expandability | Supports additional hardware as NEO develops |
 
-<p align="center">
-  <img src="images/hardware/raspberry-pi.jpg" width="550">
-</p>
+
 
 [More information on NEO's controller](hardware/hardware-architecture.md)
 
@@ -586,11 +587,8 @@ The current software is designed around camera frames of:
 | Frame Rate | Up to approximately 30 FPS |
 | Processing | Python + OpenCV |
 
-The camera's final physical height and angle will be recorded once the final mounting configuration is fixed.
 
-<p align="center">
-  <img src="images/hardware/camera.jpg" width="550">
-</p>
+
 
 [View NEO's vision system](software/vision.md)
 
@@ -630,9 +628,7 @@ The **front-centre sensor** is positioned approximately along the centreline of 
 
 The front-left and front-right sensors provide additional information from either side of the vehicle, while the rear sensor provides clearance information behind NEO.
 
-<p align="center">
-  <img src="images/hardware/sensor-layout.jpg" width="650">
-</p>
+
 
 [View detailed sensor information](hardware/sensors.md)
 
@@ -730,9 +726,7 @@ Battery → MP1584 → Motor Electronics
 
 Using separate regulated power paths helps reduce the effect of motor-related voltage fluctuations on the Raspberry Pi.
 
-<p align="center">
-  <img src="images/hardware/power-architecture.png" width="700">
-</p>
+
 
 [View full electrical system](hardware/electrical-system.md)
 
@@ -814,9 +808,7 @@ The button provides a direct physical input for operating the robot during testi
 
 Its placement allows the team to interact with the vehicle without requiring direct access to the Raspberry Pi interface each time.
 
-<p align="center">
-  <img src="images/hardware/push-button.jpg" width="450">
-</p>
+
 
 ---
 
@@ -841,9 +833,7 @@ The final schematic includes:
 - I²C communication
 - PWM control
 
-<p align="center">
-  <img src="images/hardware/circuit-diagram.png" width="800">
-</p>
+
 
 [View full-resolution circuit diagram](hardware/electrical-system.md)
 
@@ -909,9 +899,7 @@ The overall process can be represented as:
 ↓  
 **Vehicle Movement**
 
-<p align="center">
-  <img src="images/obstacle-management/obstacle-architecture.png" width="750">
-</p>
+
 
 [View obstacle-management architecture](software/vision.md)
 
@@ -973,9 +961,7 @@ The current camera-processing configuration uses:
 | Processing Library | OpenCV |
 | Main Processing Platform | Raspberry Pi 5 |
 
-<p align="center">
-  <img src="images/obstacle-management/camera-output.jpg" width="700">
-</p>
+
 
 [View computer-vision details](software/vision.md)
 
@@ -1012,9 +998,6 @@ This can be represented as:
 
 | Original Frame | Processed Mask |
 |---|---|
-| ![Original Camera Frame](images/obstacle-management/original-frame.jpg) | ![HSV Mask](images/obstacle-management/hsv-mask.jpg) |
-
-[View vision-processing details](software/vision.md)
 
 ---
 
@@ -1041,9 +1024,6 @@ This allows the program to determine where the obstacle appears relative to the 
 
 Small detections can be rejected to reduce the effect of image noise.
 
-<p align="center">
-  <img src="images/obstacle-management/obstacle-detection.jpg" width="700">
-</p>
 
 ---
 
@@ -1082,9 +1062,7 @@ NEO currently has distance sensing positioned toward:
 
 The sensor system therefore provides information from several directions around the vehicle.
 
-<p align="center">
-  <img src="images/obstacle-management/tof-directions.jpg" width="650">
-</p>
+
 
 [View sensor placement and architecture](hardware/sensors.md)
 
@@ -1248,9 +1226,7 @@ The simplified process is:
 ↓  
 **Repeat**
 
-<p align="center">
-  <img src="images/obstacle-management/decision-flowchart.png" width="700">
-</p>
+
 
 [View autonomous control logic](software/control.md)
 
@@ -1287,9 +1263,7 @@ Critical proximity condition
 ↓  
 **EMERGENCY_DODGE**
 
-<p align="center">
-  <img src="images/obstacle-management/fsm-diagram.png" width="700">
-</p>
+
 
 [View NEO's control architecture](software/control.md)
 
@@ -1370,7 +1344,8 @@ The overall software flow is:
 **Vehicle Movement**
 
 <p align="center">
-  <img src="images/software/software-architecture.png" width="750">
+  <img width="1800" height="1050" alt="software-architecture" src="https://github.com/user-attachments/assets/153c6da5-8262-4570-a254-ec11adef837d" />
+
 </p>
 
 [View NEO's source code](software/)
@@ -1459,9 +1434,7 @@ Camera frames are processed continuously while the autonomous program is operati
 
 The processed information can then be combined with distance measurements before a navigation decision is made.
 
-<p align="center">
-  <img src="images/software/vision-output.jpg" width="700">
-</p>
+
 
 ---
 
@@ -1578,9 +1551,7 @@ The simplified software loop is:
 
 This continuous loop allows NEO to react as its surroundings change.
 
-<p align="center">
-  <img src="images/software/control-loop.png" width="700">
-</p>
+
 
 ---
 
@@ -1617,9 +1588,7 @@ Immediate collision risk
 ↓  
 **EMERGENCY_DODGE**
 
-<p align="center">
-  <img src="images/software/fsm.png" width="700">
-</p>
+
 
 [View autonomous control logic](software/control.md)
 
@@ -1793,9 +1762,7 @@ This hybrid approach allows the mechanical system to remain modular while provid
 | LEGO Technic Components | Mechanical chassis, drivetrain and structural elements |
 | Custom 3D-Printed PLA Components | Chassis, steering, camera and electronics-support components |
 
-<p align="center">
-  <img src="images/parts/labelled-components.jpg" width="750">
-</p>
+
 
 [View detailed parts information](hardware/parts-list.md)
 
@@ -1876,9 +1843,7 @@ The six custom components are:
 | Camera Stand V2 | Earlier camera-support design |
 | Camera Stand V3 | Refined camera-support design |
 
-<p align="center">
-  <img src="images/3d-printing/all-parts.jpg" width="750">
-</p>
+
 
 [View and download the 3D-printable files](3d-models/README.md)
 
@@ -1902,9 +1867,6 @@ The completed vehicle geometry is:
 
 The chassis should remain rigid while maintaining sufficient space for the drivetrain, battery, electronics and sensors.
 
-<p align="center">
-  <img src="images/build/chassis.jpg" width="650">
-</p>
 
 ---
 
@@ -1925,9 +1887,7 @@ Ensure that:
 
 The differential allows the two driven wheels to rotate at different speeds during cornering.
 
-<p align="center">
-  <img src="images/build/drivetrain.jpg" width="650">
-</p>
+
 
 [View drivetrain details](mobility/drivetrain.md)
 
@@ -1943,9 +1903,7 @@ The steering assembly should move freely without the wheels or linkage contactin
 
 Before autonomous operation, the servo should be centred and the usable steering range checked.
 
-<p align="center">
-  <img src="images/build/steering-assembly.jpg" width="650">
-</p>
+
 
 [View steering details](mobility/steering.md)
 
@@ -1975,9 +1933,7 @@ Wiring should also remain clear of:
 - gears
 - steering linkage
 
-<p align="center">
-  <img src="images/build/electronics.jpg" width="700">
-</p>
+
 
 ---
 
@@ -1995,9 +1951,7 @@ The separate regulated power paths help reduce the effect of motor-related elect
 
 The battery should be securely mounted so that it cannot move during acceleration or cornering.
 
-<p align="center">
-  <img src="images/build/power-system.jpg" width="650">
-</p>
+
 
 [View electrical system and circuit diagram](hardware/electrical-system.md)
 
@@ -2021,7 +1975,8 @@ The electrical architecture includes connections between:
 - push button
 
 <p align="center">
-  <img src="images/hardware/circuit-diagram.png" width="800">
+  <img width="2582" height="1714" alt="IMG_2405" src="https://github.com/user-attachments/assets/a0eb8f7e-2d16-4db7-9e62-e84cdc2537d5" />
+
 </p>
 
 [View full-resolution electrical schematic](hardware/electrical-system.md)
@@ -2043,9 +1998,7 @@ The front-centre sensor should remain approximately centred across the width of 
 
 Sensors should be firmly mounted so that their orientation does not change during operation.
 
-<p align="center">
-  <img src="images/build/sensor-installation.jpg" width="650">
-</p>
+
 
 [View sensor placement](hardware/sensors.md)
 
@@ -2063,13 +2016,6 @@ The elevated position is intended to provide a clear view of the competition fie
 
 The camera connects directly to the Raspberry Pi through the CSI interface.
 
-The final camera height and angle will be documented once the competition configuration is fixed.
-
-<p align="center">
-  <img src="images/build/camera-assembly.jpg" width="600">
-</p>
-
-[View camera mount files](3d-models/README.md)
 
 ---
 
@@ -2109,11 +2055,6 @@ Once the mechanical and electrical systems have been checked, install any remain
 
 The completed NEO should provide clear access to the electronics while keeping the drivetrain, steering, sensors and wiring securely positioned.
 
-<p align="center">
-  <img src="images/robot/neo-hero.jpg" width="750">
-</p>
-
-[View more assembly pictures](images/build/)
 
 ---
 
