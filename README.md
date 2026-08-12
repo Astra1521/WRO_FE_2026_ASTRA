@@ -90,7 +90,7 @@ A **Raspberry Pi 5** acts as the main processing unit and is designed to process
 |---|---|---|
 | ![NEO Right](images/robot/neo-right.jpg) | ![NEO Top](images/robot/neo-top.jpg) | ![NEO Bottom](images/robot/neo-bottom.jpg) |
 
-[View more pictures of NEO](images/robot/)
+
 
 ---
 
