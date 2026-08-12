@@ -143,7 +143,7 @@ The Obstacle Challenge demonstrates NEO's autonomous navigation while detecting 
 | Obstacle Challenge | Final video to be added |
 
 The final competition videos will be added after NEO's camera system, autonomous software and competition configuration are fully completed.
-— - -
+
 
 ## Repository Contents
 
