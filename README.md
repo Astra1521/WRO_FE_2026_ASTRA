@@ -21,14 +21,15 @@ Our team brings together experience in autonomous robotics, programming, mechani
 
 | Team Member | School | Primary Role |
 |---|---|---|
-| **Dhruv Patel** | Pune International School | Software & Programming |
-| **Shayaan Patel** | Adani International School | Hardware & Assembly |
+| **Dhruv Patel** | Pune International School | Hardware & Assembly |
+| **Shayaan Patel** | Adani International School | Software & Programming|
 | **Aarna Shah** | Ahmedabad International School | Design & Documentation |
 
 **Team Mentor:** Mr. Paresh Gambhava
 
 <p align="center">
-  <img width="1000" height="900" alt="Meet_The_Team_Astra_WRO" src="https://github.com/user-attachments/assets/3926c1bf-77f9-4632-a04f-25f8d6fe8b18" />
+  <img <img width="2000" height="1800" alt="IMG_2380" src="https://github.com/user-attachments/assets/e53513ff-ddc9-4416-bac2-e79536471be0" />
+
   <img width="1672" height="940" alt="36C0BAF1-CC30-4925-941E-BB4F85F5DA72" src="https://github.com/user-attachments/assets/9ce060ad-fa69-4f17-b778-96658c0b2662" />
   
 
@@ -98,8 +99,7 @@ A **Raspberry Pi 5** acts as the main processing unit and is designed to process
 
 | Right | Top | Bottom |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="300" alt="NEO Right View"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="300" alt="NEO Top View"> | <img src="https://github.com/user-attachments/assets/aaeaf496d-b2a5-42ed-ba7c-49e77e4dc778" width="300" alt="NEO Bottom View"> |
----
+| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="300" alt="NEO Right View"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="300" alt="NEO Top View"> | <img src="https://github.com/user-attachments/assets/d8f873e9-2b76-4520-8104-242555b0fc41" width="300" alt="NEO Bottom View"> |
 
 ## Project Overview
 
@@ -222,7 +222,8 @@ Using rear-wheel drive separates propulsion from steering:
 This simplifies the mechanical architecture and allows the front steering system to operate independently from the driven axle.
 
 <p align="center">
-  <img width="1254" height="1254" alt="8566F48C-61DC-49B7-946C-DE57FBDC2CD8" src="https://github.com/user-attachments/assets/f79cd400-57fb-43ff-8dca-d6b8f8509f4e" />
+  <img “<img width="1086" height="1448" alt="980A10C0-8B23-449C-8963-9E3FD746B438" src="https://github.com/user-attachments/assets/9663f3d4-4986-4603-a89d-b230ff3efa63" />
+
 
 </p>
 
@@ -262,7 +263,8 @@ This helps:
 - produce smoother movement through turns
 
 <p align="center">
-  <img width="1448" height="1086" alt="427709E7-388B-4B78-972B-85C9B4CD5CA6" src="https://github.com/user-attachments/assets/a54e40ec-59cf-4103-bcb8-5be967c57c24" />
+  <img <img width="1086" height="1448" alt="5DA20EE9-182C-4202-AB8B-420FF2E827D3" src="https://github.com/user-attachments/assets/f0b699c5-d39d-4374-bd15-52c907f4348b" />
+ 
 
 </p>
 
@@ -287,8 +289,7 @@ The current observed physical steering range is approximately:
 
 
 <p align="center">
-  <img width="2103" height="748" alt="0D347FA7-6790-46BC-A74D-A841D161BEE1" src="https://github.com/user-attachments/assets/40849f92-d549-40b3-adbf-586cf9e150df" />
-
+  <img src="https://github.com/user-attachments/assets/7f8fbb83-f70d-4539-a616-d56c52b5ce42" width="700" alt="NEO Steering System">
 </p>
 
 [More information on NEO's steering system](mobility/steering.md)
@@ -2130,10 +2131,6 @@ Two versions of the camera stand were produced:
 **Camera Stand V2 → Camera Stand V3**
 
 Rather than redesigning the entire vehicle when the camera-support geometry was refined, only the relevant custom component needed to be modified and reprinted.
-
-| Camera Stand V2 | Camera Stand V3 |
-|---|---|
-| ![Camera Stand V2](images/3d-printing/camera-stand-v2.png) | ![Camera Stand V3](images/3d-printing/camera-stand-v3.png) |
 
 This modular approach makes mechanical changes faster and allows individual components to evolve independently.
 
