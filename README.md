@@ -74,7 +74,7 @@ A **Raspberry Pi 5** acts as the main processing unit and is designed to process
 | Front Track Width | 85 mm |
 | Rear Track Width | 85 mm |
 | Wheel Radius | 30 mm |
-| Approximate Weight | ~1.5 kg* |
+| Approximate Weight | 0.7 kg |
 | Drive | Rear-wheel drive |
 | Drive Motor | LEGO EV3 Medium Motor |
 | Steering | SG90 Micro Servo |
