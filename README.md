@@ -1,2459 +1,1075 @@
+[README (5).md](https://github.com/user-attachments/files/32411329/README.5.md)
 # TEAM ASTRA — WRO FUTURE ENGINEERS 2026
 
 <p align="center">
-  <img width="1227" height="1281" alt="F2DF74DD-A730-47C6-89DE-0BBC2A05D6F1" src="https://github.com/user-attachments/assets/e0de9b6c-283e-4a41-941f-7965bcdf1862" />
-
+  <img width="800" alt="Team Astra / NEO" src="https://github.com/user-attachments/assets/e0de9b6c-283e-4a41-941f-7965bcdf1862" />
 </p>
 
-<p align="center">
-  <b>A STAR IN MOTION</b>
-</p>
+<p align="center"><b>A STAR IN MOTION</b></p>
 
-Documentation for **Team Astra's autonomous vehicle, NEO**, developed for the **World Robot Olympiad (WRO) Future Engineers 2026** category.
+Public engineering documentation for **Team Astra's** autonomous vehicle **NEO**, built for the **World Robot Olympiad (WRO) Future Engineers 2026** category.
+
+This README is the repository entry point. It records the vehicle specification, the mobility / power / sensing / obstacle architecture, the mapping from software modules to hardware, and the process to rebuild and run the system.
+
+A separate Engineering Journal PDF should be exported from this repository for the printed copy required at the international final.
+
+**NEO docs v1.2 — 2026-09-19.** Mass 700 g, 195 × 111 × 293 mm, MP1584 9.0 V, Camera Stand V3 (lens 293 mm height, 47.3° tilt, **155 mm setback** from front bumper), BNO055 top centre **0x28** on mux 4, VL53L5X × 4, encoder 245 counts/rev, recorded lap **8.7 s at `MAX_SPEED = 95`**. Freeze this text in the official 2-week GitHub snapshot.
+
+---
+
+## Rule compliance
+
+| Rule | Limit | NEO |
+|---|---|---|
+| Length × width × height | ≤ 300 × 200 × 300 mm | **195 × 111 × 293 mm** |
+| Mass | ≤ 1.5 kg | **700 g (0.70 kg)** |
+| Wheels | 4 wheels | 4 wheels, 30 mm radius |
+| Drive | one driving axle | rear axle, rear-wheel drive |
+| Steering | one steering actuator | SG90 micro servo on the front wheels |
+| Control | fully autonomous | Raspberry Pi 5 |
+
+The outline of the vehicle does not change during a round.
 
 ---
 
 ## Team Astra
 
-Team Astra is a three-member robotics team competing in WRO Future Engineers 2026.
-
-Our team brings together experience in autonomous robotics, programming, mechanical assembly, design, and technical documentation.
-
-| Team Member | School | Primary Role |
+| Team member | School | Primary role |
 |---|---|---|
-| **Dhruv Patel** | Pune International School | Hardware & Assembly |
-| **Shayaan Patel** | Adani International School | Software & Programming|
-| **Aarna Shah** | Ahmedabad International School | Design & Documentation |
+| **Dhruv Patel** | Pune International School | Hardware and assembly |
+| **Shayaan Patel** | Adani International School | Software and programming |
+| **Aarna Shah** | Ahmedabad International School | Design and documentation |
 
-**Team Mentor:** Mr. Paresh Gambhava
+**Team mentor:** Mr. Paresh Gambhava
 
 <p align="center">
-  <img <img width="2000" height="1800" alt="IMG_2380" src="https://github.com/user-attachments/assets/e53513ff-ddc9-4416-bac2-e79536471be0" />
-
-  <img width="1672" height="940" alt="36C0BAF1-CC30-4925-941E-BB4F85F5DA72" src="https://github.com/user-attachments/assets/9ce060ad-fa69-4f17-b778-96658c0b2662" />
-  
-
-
+  <img width="480" alt="Team photo" src="https://github.com/user-attachments/assets/e53513ff-ddc9-4416-bac2-e79536471be0" />
+  <img width="480" alt="Team photo 2" src="https://github.com/user-attachments/assets/9ce060ad-fa69-4f17-b778-96658c0b2662" />
 </p>
+
+Store the official and informal team photographs in `t-photos/`.
 
 ---
 
-## Our Robot — NEO
+## AI usage policy
 
-<p align="center">
-  
-<img width="900" height="900" alt="Neo_Rotating_Robot_10MB" src="https://github.com/user-attachments/assets/5bdba160-a6bc-4c59-a5e1-105b41ca154e" />
+In accordance with WRO Ethics Code and the spirit of the Future Engineers category, Team Astra declares the following regarding the use of AI tools in this project:
 
+| Area | AI involvement |
+|---|---|
+| Mechanical design and assembly | **None.** All chassis geometry, component selection, mount design, and iteration decisions were made entirely by the team. |
+| Electrical design and wiring | **None.** Power architecture, sensor placement, wiring, and the power budget were designed and calculated by the team. |
+| Software architecture and algorithms | **None.** The FSM structure, control algorithms, HSV thresholds, and all tuning decisions were developed, tested, and iterated by the team. |
+| Engineering documentation | **None.** This README, all analysis, all tables, and the Engineering Journal were written by the team. |
+| Code proofreading and debugging | **Minimal.** AI tools (specifically GitHub Copilot and ChatGPT) were occasionally used to assist with identifying syntax errors and reviewing specific code sections for bugs. No AI tool generated logic, algorithms, or architectural decisions. Final code is the team's own work. |
 
-</p>
-
-**NEO** is Team Astra's autonomous vehicle for WRO Future Engineers 2026.
-
-The robot was designed around three main priorities:
-
-- compact and stable mechanical construction
-- reliable autonomous sensing and navigation
-- modular hardware that can be modified and tested efficiently
-
-NEO combines a **LEGO Technic drivetrain and differential system** with **custom 3D-printed PLA components**, allowing us to combine rapid LEGO prototyping with purpose-built structural parts.
-
-The vehicle uses **rear-wheel drive**, powered by a **LEGO EV3 Medium Motor**, while an **SG90 Micro Servo** controls the steering system.
-
-A **Raspberry Pi 5** acts as the main processing unit and is designed to process camera and sensor information before making autonomous driving decisions.
+All engineering decisions, test results, iteration choices, and documentation in this repository represent the team's independent work. AI was not used to design, build, or document the robot — only to support basic code review in the same way a spell-checker supports writing.
 
 ---
 
-## NEO at a Glance
+## Hardware on this revision
 
-| Specification | NEO |
+| Item | Status |
+|---|---|
+| Technic chassis, EV3 Medium Motor, LEGO Technic differential, wheels | Installed |
+| SG90 front steering | Installed. Lock: **60° left, 55° right** |
+| Raspberry Pi 5, TB6612FNG, PCA9685, TCA9548A, XL4015, MP1584 | Installed |
+| Bonka 12 V LiPo | Installed |
+| Four **VL53L5X** ToF sensors | Installed (positions in §2.4) |
+| Raspberry Pi Camera 3 Wide on Camera Stand V3 | Installed (lens height 293 mm, tilt 47.3° down, setback 155 mm) |
+| BNO055 IMU / gyro | Installed on the top face, vehicle centreline, mux 4, address **0x28** |
+| Quadrature encoder, BCM 17 / 27 | Installed, **245 counts/rev**, used for distance, slip and park |
+| Open / Obstacle videos | In this repository and on YouTube |
+
+---
+
+## NEO at a glance
+
+| Specification | Value |
 |---|---|
 | Length | 195 mm |
 | Width | 111 mm |
-| Height | 122 mm |
+| Height | 293 mm |
 | Wheelbase | 150 mm |
-| Front Track Width | 85 mm |
-| Rear Track Width | 85 mm |
-| Wheel Radius | 30 mm |
-| Approximate Weight | 0.7 kg |
-| Drive | Rear-wheel drive |
-| Drive Motor | LEGO EV3 Medium Motor |
-| Steering | SG90 Micro Servo |
-| Main Controller | Raspberry Pi 5 |
+| Front track width | 85 mm |
+| Rear track width | 85 mm |
+| Wheel radius | 30 mm |
+| Wheel diameter | 60 mm |
+| Mass | **700 g** |
+| Drive | Rear-wheel drive, one driven axle |
+| Drive motor | LEGO EV3 Medium Motor |
+| Differential | LEGO Technic differential on the rear axle |
+| Steering | SG90 micro servo |
+| Steering lock | **60° left, 55° right** |
+| Main controller | Raspberry Pi 5 |
 | Camera | Raspberry Pi Camera 3 Wide |
-| Battery | Bonka 11.1 V 2200 mAh LiPo |
-| Manufacturing | LEGO Technic + custom 3D-printed PLA parts |
-| 3D Printer | Bambu Lab A1 |
-| Recorded Lap Time | Approximately 8.7 seconds |
+| Camera pose | Lens 293 mm above mat, 47.3° down, **155 mm** behind front bumper |
+| IMU | BNO055, top centre, mux 4, **0x28** |
+| Distance sensors | Four **VL53L5X** |
+| Odometry | Encoder BCM 17 / 27, **245 counts/rev** |
+| Motor rail | MP1584 set to **9.0 V** (see §2.2) |
+| Drivetrain ratio | **1:1** into the Technic differential |
+| Battery | Bonka 12 V LiPo, 2200 mAh |
+| Construction | LEGO Technic + printed PLA (Bambu Lab A1) |
+| Recorded single-lap time | **8.7 s** at **`MAX_SPEED = 95`** (fast run, not Open cruise) |
 
+<p align="center">
+  <img width="520" alt="NEO" src="https://github.com/user-attachments/assets/5bdba160-a6bc-4c59-a5e1-105b41ca154e" />
+</p>
 
 ---
 
-## Robot Views
-
-
+## Vehicle photographs (required)
 
 | Front | Rear | Left |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/08a80e9d-fb54-4c7f-a078-1f7dcefe13ed" width="300" alt="NEO Front View"> | <img src="https://github.com/user-attachments/assets/c562da21-df0f-404e-8824-0cfd6bfd905d" width="300" alt="NEO Rear View"> | <img src="https://github.com/user-attachments/assets/da662955-3f9c-422a-923d-9d184cdc3dea" width="300" alt="NEO Left View"> |
-
+| <img src="https://github.com/user-attachments/assets/08a80e9d-fb54-4c7f-a078-1f7dcefe13ed" width="280" alt="Front"> | <img src="https://github.com/user-attachments/assets/c562da21-df0f-404e-8824-0cfd6bfd905d" width="280" alt="Rear"> | <img src="https://github.com/user-attachments/assets/da662955-3f9c-422a-923d-9d184cdc3dea" width="280" alt="Left"> |
 
 | Right | Top | Bottom |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="300" alt="NEO Right View"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="300" alt="NEO Top View"> | <img src="https://github.com/user-attachments/assets/d8f873e9-2b76-4520-8104-242555b0fc41" width="300" alt="NEO Bottom View"> |
+| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="280" alt="Right"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="280" alt="Top"> | <img src="https://github.com/user-attachments/assets/d8f873e9-2b76-4520-8104-242555b0fc41" width="280" alt="Bottom"> |
 
-## Project Overview
-
-WRO Future Engineers requires teams to design an autonomous vehicle capable of navigating the competition field and responding to its surroundings without manual control.
-
-Our approach with NEO separates the vehicle into four major systems:
-
-1. **Mobility** — drivetrain, differential, wheels and steering
-2. **Sensing** — camera and Time-of-Flight distance sensors
-3. **Control** — Raspberry Pi 5 and supporting control electronics
-4. **Power** — LiPo battery and independent voltage regulation
-
-The mechanical platform was designed to remain compact while providing enough space for the drivetrain, sensors, electronics, battery, wiring and custom mounting structures.
-
-The modular design also allows individual components to be removed, adjusted or replaced without rebuilding the complete robot.
-
----
-# Performance Videos
-
-The following videos demonstrate NEO operating autonomously during the two WRO Future Engineers challenges.
-
-## Open Challenge
-
-The Open Challenge demonstrates NEO's ability to autonomously navigate the track and complete the required laps without manual control.
-
-<!-- ADD FINAL OPEN CHALLENGE VIDEO LINK HERE --> https://youtu.be/b3JmTygBYIU
-
-[Watch NEO — Open Challenge](https://youtu.be/b3JmTygBYIU)
+File copies live in `v-photos/` as `front.jpg`, `rear.jpg`, `left.jpg`, `right.jpg`, `top.jpg`, `bottom.jpg`.
 
 ---
 
-## Obstacle Challenge
+## Performance videos (required)
 
-The Obstacle Challenge demonstrates NEO's autonomous navigation while detecting and responding to obstacles using its camera, distance sensors and control system.
+One YouTube video per challenge. Autonomous driving in each clip is the official demonstration.
 
-<!-- ADD FINAL OBSTACLE CHALLENGE VIDEO LINK HERE --> https://youtu.be/H_eWYqw8Qmo
-
-[Watch NEO — Obstacle Challenge](https://youtu.be/H_eWYqw8Qmo)
-
----
-
-## Current Performance
-
-| Test | Result |
+| Challenge | Link |
 |---|---|
-| Recorded Lap Time | Approximately 8.7 seconds |
-| Open Challenge | Final video to be added |
-| Obstacle Challenge | Final video to be added |
+| Open Challenge | https://youtu.be/b3JmTygBYIU |
+| Obstacle Challenge | https://youtu.be/H_eWYqw8Qmo |
 
-The final competition videos will be added after NEO's camera system, autonomous software and competition configuration are fully completed.
-
-
-## Repository Contents
-
-This repository documents the complete development of NEO.
-
-- **Mobility Management** — drivetrain, steering, differential and vehicle geometry
-- **Hardware Architecture** — controller, sensors, motor electronics and communication
-- **Power Management** — battery, voltage regulation and electrical distribution
-- **3D Design & Manufacturing** — custom mounts, structural parts and CAD files
-- **Obstacle Management** — environmental sensing and autonomous navigation architecture
-- **Software** — autonomous control code and Raspberry Pi environment
-- **Building Instructions** — mechanical and electrical assembly
-- **Engineering Calculations** — track distance, theoretical speed and wheel RPM
-- **Possible Improvements** — planned developments and future optimisation
-
----
-# Mobility Management
-
-NEO uses a compact **rear-wheel-drive configuration** designed for stable movement, tight turns and predictable autonomous control.
-
-The mobility system consists of:
-
-- LEGO EV3 Medium Motor for propulsion
-- LEGO differential on the rear axle
-- SG90 Micro Servo for front-wheel steering
-- 60 mm diameter wheels
-- LEGO Technic structural components
-- Custom 3D-printed components
-
-The rear wheels provide propulsion while the front wheels are dedicated to steering, keeping the two major mobility functions mechanically separate.
+Same URLs live in `video/video.md`.
 
 ---
 
-## Vehicle Geometry
+# 1. Mobility and mechanical design
 
-| Parameter | Measurement |
-|---|---:|
-| Length | 195 mm |
-| Width | 111 mm |
-| Height | 122 mm |
+Propulsion and steering are separate mechanisms:
+
+```
+EV3 Medium Motor → LEGO Technic differential → rear axle → rear wheels     (drive)
+SG90            → 13 mm horn → steering linkage → front wheels           (steer)
+```
+
+That matches the rule of one driving axle and one steering actuator.
+
+## 1.1 Geometry
+
+| Parameter | Value |
+|---|---|
+| Length × width × height | 195 × 111 × 293 mm |
 | Wheelbase | 150 mm |
-| Front Track Width | 85 mm |
-| Rear Track Width | 85 mm |
-| Wheel Radius | 30 mm |
-| Wheel Diameter | 60 mm |
-| Approximate Weight | ~1.5 kg |
+| Front / rear track | 85 mm / 85 mm |
+| Wheel radius | 30 mm |
+| Mass | 700 g |
 
-The **150 mm wheelbase** provides enough space for the drivetrain, battery, electronics and sensors while maintaining a compact vehicle footprint.
+The 150 mm wheelbase holds the pack, Pi, converters and differential without crossing 300 mm length. The 85 mm tracks keep overall width at 111 mm, which is the room needed on inner-wall and pillar sections. 60 mm wheels put the ToF windows at 65–70 mm above the mat. Camera Stand V3 is the tallest part: the lens centre is 293 mm above the mat, which is also the vehicle height used for rule compliance.
 
-The **85 mm front and rear track widths** help keep NEO narrow enough for manoeuvring around the Future Engineers field.
+## 1.2 Drive motor
 
-[View NEO's mobility calculations](mobility/calculations.md)
+The **LEGO EV3 Medium Motor** (45503) was selected because it fits the chassis and mates directly to Technic axles and the Technic differential.
 
----
+Published motor data used in the calculations below (Philo motor comparison and Brick Experiment Channel, EV3 Medium):
 
-## Drive System
-
-NEO uses a **rear-wheel-drive system** powered by a LEGO EV3 Medium Motor.
-
-The drivetrain can be represented as:
-
-**LEGO EV3 Medium Motor → LEGO Differential → Rear Axle → Rear Wheels**
-
-Using rear-wheel drive separates propulsion from steering:
-
-- **Rear wheels:** propulsion
-- **Front wheels:** steering
-
-This simplifies the mechanical architecture and allows the front steering system to operate independently from the driven axle.
-
-<p align="center">
-  <img “<img width="1086" height="1448" alt="980A10C0-8B23-449C-8963-9E3FD746B438" src="https://github.com/user-attachments/assets/9663f3d4-4986-4603-a89d-b230ff3efa63" />
-
-
-</p>
-
-[More information on NEO's drivetrain](mobility/drivetrain.md)
-
----
-
-## Drive Motor
-
-NEO is propelled by a **LEGO EV3 Medium Motor**.
-
-The motor was selected because its compact size allows it to fit within NEO's small chassis while integrating directly with the LEGO-based drivetrain.
-
-Using a LEGO motor also allows compatible gears, axles and differential components to be connected without requiring a completely custom transmission system.
-
-During current operation, NEO has recorded a lap time of approximately **8.7 seconds** around the mat.
-
-This is an observed performance measurement and is kept separate from our theoretical speed calculations.
-
-[View mobility calculations](mobility/calculations.md)
-
----
-
-## Differential
-
-A **LEGO differential gear system** is installed on NEO's driven rear axle.
-
-During a turn, the outside wheel travels a greater distance than the inside wheel. The two rear wheels therefore need to rotate at different speeds.
-
-The differential allows this difference while continuing to transfer power from the EV3 Medium Motor to both rear wheels.
-
-This helps:
-
-- reduce wheel slip
-- improve cornering
-- reduce stress on the drivetrain
-- produce smoother movement through turns
-
-<p align="center">
-  <img <img width="1086" height="1448" alt="5DA20EE9-182C-4202-AB8B-420FF2E827D3" src="https://github.com/user-attachments/assets/f0b699c5-d39d-4374-bd15-52c907f4348b" />
- 
-
-</p>
-
-[More information on NEO's drivetrain](mobility/drivetrain.md)
-
----
-
-## Steering System
-
-NEO uses **front-wheel steering** controlled by an SG90 Micro Servo.
-
-The servo transfers rotational movement through the steering mechanism to change the direction of the front wheels.
-
-This allows the autonomous software to make continuous steering corrections rather than relying only on fixed left, centre and right positions.
-
-The current observed physical steering range is approximately:
-
-| Direction | Approximate Maximum |
-|---|---:|
-| Left | ~60° |
-| Right | Slightly above 45° |
-
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/7f8fbb83-f70d-4539-a616-d56c52b5ce42" width="700" alt="NEO Steering System">
-</p>
-
-[More information on NEO's steering system](mobility/steering.md)
-
----
-
-## Wheels
-
-NEO uses wheels with an approximate radius of **30 mm**, giving a diameter of approximately **60 mm**.
-
-The circumference of each wheel is calculated using:
-
-**C = 2πr**
-
-With:
-
-**r = 0.03 m**
-
-Therefore:
-
-**C = 2π(0.03)**
-
-**C ≈ 0.1885 m**
-
-This means one complete wheel rotation theoretically moves NEO approximately **0.1885 m**, assuming no wheel slip.
-
-Wheel size affects:
-
-- distance travelled per rotation
-- vehicle speed
-- required motor torque
-- ground clearance
-- overall chassis geometry
-
-[View full wheel and speed calculations](mobility/calculations.md)
-
----
-
-## Mobility Calculations
-
-For our theoretical mobility calculations, the estimated distance travelled over three laps was taken as approximately **26.4 m**.
-
-### Theoretical 100% Speed
-
-For three laps completed in approximately **27 seconds**:
-
-**Linear Speed = Distance ÷ Time**
-
-**26.4 ÷ 27 ≈ 0.978 m/s**
-
-Using a wheel circumference of approximately **0.1885 m**:
-
-**Wheel Speed ≈ 311 RPM**
-
-### Theoretical 80% Speed
-
-For three laps completed in approximately **32 seconds**:
-
-**26.4 ÷ 32 ≈ 0.825 m/s**
-
-This corresponds to approximately:
-
-**262 RPM**
-
-| Calculation | 100% | 80% |
-|---|---:|---:|
-| 3-Lap Distance | 26.4 m | 26.4 m |
-| Time | 27 s | 32 s |
-| Linear Speed | ~0.978 m/s | ~0.825 m/s |
-| Wheel Speed | ~311 RPM | ~262 RPM |
-
-These values are **theoretical estimates** based on the calculated travel distance and wheel circumference. They assume a **1:1 effective drivetrain ratio** and do not account for factors such as wheel slip, drivetrain losses or variations in motor speed.
-
-They are therefore documented separately from NEO's experimentally observed lap time.
-
-
-
-[View full engineering calculations](mobility/calculations.md)
-
----
-
-## Chassis Construction
-
-NEO uses a hybrid construction system combining **LEGO Technic** with **custom 3D-printed PLA components**.
-
-LEGO Technic is used for much of the drivetrain and mechanical assembly because it provides a modular system for:
-
-- wheels
-- axles
-- gears
-- differential components
-- structural connections
-
-Custom 3D-printed components are used where dedicated geometry is required for NEO's steering, camera and electronics.
-
-This approach combines the rapid adjustability of LEGO with the design freedom of CAD and additive manufacturing.
-
----
-
-## Custom 3D-Printed Components
-
-NEO currently uses six custom-designed 3D-printed components.
-
-All custom components are manufactured using:
-
-| Parameter | Specification |
-|---|---|
-| 3D Printer | Bambu Lab A1 |
-| Material | PLA |
-| Manufacturing Method | FDM 3D Printing |
-
-The six custom parts are:
-
-| Part | Function |
-|---|---|
-| FE2026 Custom Chassis | Structural platform for integrating NEO's mechanical and electronic systems |
-| Servo Stand | Secures the SG90 steering servo |
-| Servo Horn – 13 mm | Transfers servo rotation to the steering mechanism |
-| Pi Camera 3 Mount | Holds the Raspberry Pi Camera 3 Wide |
-| Camera Stand V2 | Earlier version of the elevated camera-support structure |
-| Camera Stand V3 | Refined version of the camera-support structure |
-
-
-
-[View all 3D-printed parts and files](3d-models/README.md)
-
----
-
-## Custom Part Design
-
-3D printing allowed us to design components around NEO's geometry rather than adapting the entire robot around standard mounting solutions.
-
-The custom chassis provides a structural interface between the LEGO mechanical system and NEO's electronics.
-
-Dedicated servo components secure the steering mechanism, while the camera stand and Pi Camera 3 mount provide a dedicated structure for the vision system.
-
-Because the parts are modular, individual components can be redesigned and reprinted without rebuilding the entire vehicle.
-
----
-
-## Camera Stand Development
-
-The camera-support system went through multiple versions during development.
-
-**Camera Stand V2** and **Camera Stand V3** represent successive iterations of the same mounting concept.
-
-The overall concept was retained while the geometry was refined, allowing the camera-support structure to evolve without requiring a redesign of the entire chassis.
-
-| Camera Stand V2 | Camera Stand V3 |
-|---|---|
-
-
-[View camera stand iterations](3d-models/README.md)
-
----
-
-## Sensor Placement
-
-NEO's distance sensors are positioned around the chassis to provide information from multiple directions.
-
-| Sensor | Height from Ground | Longitudinal Position |
-|---|---:|---:|
-| Rear Distance Sensor | 65 mm | 45 mm from rear edge |
-| Front-Left Sensor | 70 mm | 170 mm from rear edge |
-| Front-Centre Sensor | 68 mm | 190 mm from rear edge |
-| Front-Right Sensor | 70 mm | 170 mm from rear edge |
-
-The front-centre sensor is positioned approximately along the centreline of the robot.
-
-The left and right sensors provide additional information around the front of NEO, while the rear sensor provides information behind the vehicle.
-
-
-[View detailed sensor placement](hardware/sensors.md)
-
----
-
-## Mobility System Summary
-
-NEO's mobility architecture combines:
-
-- rear-wheel drive
-- LEGO EV3 Medium Motor propulsion
-- LEGO differential
-- front servo steering
-- 150 mm wheelbase
-- 85 mm track width
-- 60 mm diameter wheels
-- LEGO Technic construction
-- custom 3D-printed PLA components
-
-The system was designed to provide a compact and modular mechanical platform on which NEO's sensing, control and autonomous navigation systems can operate.
-# Power & Sense Management
-
-NEO's electrical architecture is centred around the **Raspberry Pi 5**, which acts as the main controller for sensing, processing and autonomous decision-making.
-
-The system combines:
-
-- Raspberry Pi 5
-- Raspberry Pi Camera 3 Wide
-- Time-of-Flight distance sensors
-- TCA9548A I²C Multiplexer
-- PCA9685 PWM Controller
-- TB6612FNG Motor Driver
-- SG90 Micro Servo
-- LEGO EV3 Medium Motor
-- XL4015 Buck Converter
-- MP1584 Buck Converter
-- Bonka 11.1 V 2200 mAh LiPo Battery
-
-The electrical system is designed so that sensing, processing, steering and propulsion can operate together while maintaining stable power delivery to the Raspberry Pi and motor electronics.
-
----
-
-## Hardware Architecture
-
-The **Raspberry Pi 5** serves as the central controller of NEO.
-
-It processes sensor data, camera information and autonomous driving algorithms before generating commands for the steering and propulsion systems.
-
-The overall architecture can be represented as:
-
-**Camera + Distance Sensors**  
-↓  
-**Raspberry Pi 5**  
-↓  
-**Autonomous Decision Making**  
-↓  
-**Steering Control + Motor Control**  
-↓  
-**NEO's Movement**
-
-<p align="center">
-<img width="1536" height="1024" alt="IMG_2407" src="https://github.com/user-attachments/assets/684f0397-d396-4e48-9a4c-e5d33502d106" />
-
-  </p>
-
-[View full hardware architecture](hardware/hardware-architecture.md)
-
----
-
-## Main Controller — Raspberry Pi 5
-
-The **Raspberry Pi 5** is NEO's main computing platform.
-
-It was selected because autonomous navigation requires significantly more processing than simple sensor-based robotics, particularly when computer vision is involved.
-
-The Raspberry Pi allows NEO to:
-
-- process camera frames
-- read distance sensors
-- run autonomous navigation algorithms
-- calculate steering corrections
-- control propulsion
-- manage multiple hardware interfaces
-
-It also provides strong compatibility with **Python and OpenCV**, which are used within NEO's software architecture.
-
-### Why We Chose the Raspberry Pi 5
-
-| Requirement | Raspberry Pi 5 Advantage |
-|---|---|
-| Computer Vision | Sufficient processing capability for OpenCV |
-| Programming | Strong Python support |
-| Camera | Native CSI camera interface |
-| Sensors | Supports I²C and GPIO communication |
-| Autonomous Control | Can process sensing and decision-making on one platform |
-| Expandability | Supports additional hardware as NEO develops |
-
-
-
-[More information on NEO's controller](hardware/hardware-architecture.md)
-
----
-
-## Computer Vision — Raspberry Pi Camera 3 Wide
-
-NEO uses a **Raspberry Pi Camera 3 Wide** for computer vision.
-
-The wide field of view is useful for autonomous navigation because it allows a larger portion of the competition field to appear within each camera frame.
-
-This helps reduce blind areas and provides more visual information for:
-
-- obstacle detection
-- obstacle colour recognition
-- navigation
-- corner approach
-- parking
-
-The camera connects directly to the Raspberry Pi through the **CSI interface**, providing a compact and stable connection without requiring a conventional USB camera.
-
-The current software is designed around camera frames of:
-
-| Parameter | Configuration |
-|---|---:|
-| Resolution | 640 × 480 |
-| Frame Rate | Up to approximately 30 FPS |
-| Processing | Python + OpenCV |
-
-
-
-
-[View NEO's vision system](software/vision.md)
-
----
-
-## Distance Sensing
-
-NEO uses **Time-of-Flight (ToF) laser ranging sensors** to obtain direct distance measurements from its surroundings.
-
-The sensing hardware includes the **VL53L5X** and additional ToF ranging hardware used around the vehicle.
-
-Distance sensing complements the camera because it provides numerical proximity information rather than relying entirely on visual estimation.
-
-These measurements can support:
-
-- wall-distance monitoring
-- obstacle avoidance
-- front clearance detection
-- rear clearance detection
-- collision prevention
-- parking
-
----
-
-## Sensor Arrangement
-
-Distance sensors are positioned around NEO to provide information from several directions.
-
-| Sensor Position | Height from Ground | Position |
-|---|---:|---|
-| Rear | 65 mm | 45 mm from rear edge |
-| Front-Left | 70 mm | 170 mm from rear edge |
-| Front-Centre | 68 mm | 190 mm from rear edge |
-| Front-Right | 70 mm | 170 mm from rear edge |
-
-The **front-centre sensor** is positioned approximately along the centreline of NEO.
-
-The front-left and front-right sensors provide additional information from either side of the vehicle, while the rear sensor provides clearance information behind NEO.
-
-
-
-[View detailed sensor information](hardware/sensors.md)
-
----
-
-## TCA9548A I²C Multiplexer
-
-NEO uses a **TCA9548A 8-channel I²C multiplexer** to manage communication between multiple I²C devices.
-
-I²C allows several electronic devices to communicate with the Raspberry Pi through a shared communication bus.
-
-However, multiple identical devices may use the same I²C address.
-
-The TCA9548A solves this by allowing devices to be separated across selectable channels.
-
-### Why We Use the TCA9548A
-
-- manages multiple I²C devices
-- helps prevent address conflicts
-- simplifies sensor communication
-- allows individual channels to be selected
-- makes the sensing architecture easier to expand
-
-[View NEO's sensor architecture](hardware/sensors.md)
-
----
-
-## Steering Control — PCA9685
-
-NEO uses a **PCA9685 16-channel PWM controller** as part of the steering-control architecture.
-
-The SG90 servo requires a PWM signal to determine its position.
-
-Using dedicated PWM hardware allows stable servo-control signals to be generated without requiring the Raspberry Pi to continuously handle precise PWM timing in software.
-
-The control path can be represented as:
-
-**Raspberry Pi 5**  
-↓  
-**PCA9685**  
-↓  
-**SG90 Micro Servo**  
-↓  
-**Steering Mechanism**
-
-This allows NEO's autonomous software to translate calculated steering corrections into physical movement of the front wheels.
-
----
-
-## Motor Control — TB6612FNG
-
-NEO uses a **TB6612FNG motor driver** to control the LEGO EV3 Medium Motor.
-
-The Raspberry Pi cannot directly provide the electrical power required by the drive motor. The motor driver therefore acts as an interface between the control system and the propulsion system.
-
-The motor-control path can be represented as:
-
-**Raspberry Pi 5**  
-↓  
-**TB6612FNG Motor Driver**  
-↓  
-**LEGO EV3 Medium Motor**  
-↓  
-**Differential**  
-↓  
-**Rear Wheels**
-
-The TB6612FNG allows the control system to manage motor direction and speed while keeping the motor's power demand separate from the Raspberry Pi's control signals.
-
----
-
-## Power Architecture
-
-NEO is powered by a **Bonka 11.1 V 2200 mAh LiPo battery**.
-
-Because the Raspberry Pi and motor electronics require different regulated supplies, NEO uses two separate DC-DC buck converters.
-
-| Component | Function |
-|---|---|
-| Bonka 11.1 V 2200 mAh LiPo | Main power source |
-| XL4015 5 V 5 A | Raspberry Pi power regulation |
-| MP1584 3 A | Motor electronics power regulation |
-
-The power architecture can be simplified as:
-
-**11.1 V LiPo Battery**  
-↓  
-**Power Distribution**
-
-**Branch 1:**  
-Battery → XL4015 → Raspberry Pi 5
-
-**Branch 2:**  
-Battery → MP1584 → Motor Electronics
-
-Using separate regulated power paths helps reduce the effect of motor-related voltage fluctuations on the Raspberry Pi.
-
-
-
-[View full electrical system](hardware/electrical-system.md)
-
----
-
-## XL4015 Buck Converter
-
-The **XL4015 5 V 5 A buck converter** is used to provide the regulated supply required by the Raspberry Pi.
-
-A stable Raspberry Pi power supply is important because voltage instability can affect:
-
-- processing
-- camera operation
-- sensor communication
-- software reliability
-
-The XL4015 was selected to provide the current capacity required by the Raspberry Pi 5 while stepping down the battery voltage.
-
----
-
-## MP1584 Buck Converter
-
-The **MP1584 3 A buck converter** is used for NEO's motor-electronics power system.
-
-Using a separate converter for this part of the robot reduces the interaction between motor-related electrical loads and the Raspberry Pi's regulated power supply.
-
-This separation improves the organisation and stability of NEO's power architecture.
-
----
-
-## Battery Energy
-
-NEO's battery is rated at:
-
-**11.1 V, 2200 mAh**
-
-Battery capacity:
-
-**2200 mAh = 2.2 Ah**
-
-The nominal stored energy can therefore be estimated using:
-
-**Energy = Voltage × Capacity**
-
-**Energy = 11.1 × 2.2**
-
-**Energy ≈ 24.4 Wh**
-
-NEO therefore has approximately **24.4 Wh of nominal battery energy** available from a fully charged battery under idealised conditions.
-
-Actual runtime depends on factors including:
-
-- Raspberry Pi processing load
-- motor speed
-- steering activity
-- sensor usage
-- converter efficiency
-- drivetrain load
-
-For this reason, the energy calculation is documented separately from measured runtime.
-
----
-
-## Battery Charging
-
-The LiPo battery is charged using an **iMAX B6AC Dual Power 80 W balance charger**.
-
-A balance charger is used to maintain the LiPo cells correctly during charging and repeated testing.
-
-The battery is checked before operation and securely mounted within the chassis so that it cannot shift significantly during acceleration, braking or cornering.
-
----
-
-## Push Button
-
-NEO includes a physical **push button** as part of its control system.
-
-The button provides a direct physical input for operating the robot during testing and competition runs.
-
-Its placement allows the team to interact with the vehicle without requiring direct access to the Raspberry Pi interface each time.
-
-
-
----
-
-## Electrical Schematic
-
-The electrical schematic documents the connections between NEO's main computing, sensing, control and power systems.
-
-The final schematic includes:
-
-- Raspberry Pi 5
-- PCA9685
-- TCA9548A
-- TB6612FNG
-- ToF sensors
-- SG90 Micro Servo
-- LEGO EV3 Medium Motor
-- XL4015
-- MP1584
-- LiPo battery
-- power connections
-- signal connections
-- I²C communication
-- PWM control
-
-
-
-[View full-resolution circuit diagram](hardware/electrical-system.md)
-
----
-
-## BNO055 Development
-
-A **BNO055 IMU / gyro sensor** was included during NEO's development for orientation and heading sensing.
-
-The BNO055 can provide fused orientation information that may be used for:
-
-- heading estimation
-- turn-angle measurement
-- orientation correction
-
-The sensor has been part of NEO's development architecture, although it is not currently installed in the present physical configuration.
-
-The related software has been retained as part of the project's development history and may be used again if orientation sensing provides a useful performance improvement.
-
----
-
-## Safety Measures
-
-NEO incorporates several measures intended to improve electrical and mechanical reliability.
-
-- **Separate power regulation:** Independent converters are used for the Raspberry Pi and motor electronics.
-- **Secure battery mounting:** The LiPo battery is fixed within the chassis to prevent movement during operation.
-- **Physical push button:** Provides direct control during testing and operation.
-- **Secure electronics:** Boards and components are mounted to reduce movement and accidental disconnections.
-- **Organised wiring:** Wiring is positioned away from moving drivetrain and steering components.
-- **Battery monitoring:** Battery condition is checked before operation to reduce the risk of excessive discharge.
-- **Balance charging:** The LiPo battery is charged using an iMAX B6AC balance charger.
-- **Software steering limits:** Normal steering commands are restricted to avoid unnecessarily forcing the mechanism against its physical limits.
-
----
-
-## Power & Sense Management Summary
-
-NEO's power and sensing architecture combines a **Raspberry Pi 5**, camera, multiple distance sensors, dedicated control electronics and independently regulated power paths.
-
-The Raspberry Pi acts as the central processing platform, while the camera and ToF sensors provide environmental information.
-
-The PCA9685 and TB6612FNG translate autonomous control decisions into steering and propulsion, while the XL4015 and MP1584 regulate power for the computing and motor systems.
-
-Together, these systems connect NEO's sensing, decision-making and physical movement into one integrated autonomous platform.
-# Obstacle Management
-
-NEO's obstacle-management system combines **computer vision** with **Time-of-Flight distance sensing** to understand the environment and make autonomous navigation decisions.
-
-The Raspberry Pi 5 receives information from the camera and distance sensors, processes this information, and determines the appropriate steering and propulsion response.
-
-The overall process can be represented as:
-
-**Camera + ToF Sensors**  
-↓  
-**Environmental Perception**  
-↓  
-**Raspberry Pi 5**  
-↓  
-**Navigation Decision**  
-↓  
-**Steering + Motor Control**  
-↓  
-**Vehicle Movement**
-
-
-
-[View obstacle-management architecture](software/vision.md)
-
----
-
-## Environmental Perception
-
-NEO uses two complementary methods to understand its surroundings.
-
-### Computer Vision
-
-The Raspberry Pi Camera 3 Wide provides visual information that can be processed to identify:
-
-- obstacle colour
-- obstacle position
-- relevant regions of the competition field
-
-### Distance Sensing
-
-The ToF sensors provide direct numerical measurements that can help determine:
-
-- front clearance
-- left and right proximity
-- rear clearance
-- distance from surrounding objects or boundaries
-
-The camera provides richer visual information, while the ToF sensors provide direct distance information.
-
-Using both allows the autonomous system to make decisions using more than one type of environmental input.
-
----
-
-## Computer Vision Pipeline
-
-NEO's computer-vision system runs on the Raspberry Pi 5 using **Python and OpenCV**.
-
-The basic vision pipeline is:
-
-**Capture Camera Frame**  
-↓  
-**Prepare Image**  
-↓  
-**Convert Colour Space**  
-↓  
-**Apply Colour Masks**  
-↓  
-**Detect Relevant Regions**  
-↓  
-**Analyse Obstacle Position**  
-↓  
-**Provide Information to Navigation Logic**
-
-The current camera-processing configuration uses:
-
-| Parameter | Configuration |
-|---|---:|
-| Resolution | 640 × 480 |
-| Frame Rate | Up to approximately 30 FPS |
-| Processing Library | OpenCV |
-| Main Processing Platform | Raspberry Pi 5 |
-
-
-
-[View computer-vision details](software/vision.md)
-
----
-
-## HSV Colour Detection
-
-NEO's vision system uses the **HSV colour space** to distinguish relevant coloured obstacles.
-
-HSV separates colour information into:
-
-- **Hue** — type of colour
-- **Saturation** — intensity of the colour
-- **Value** — brightness
-
-The camera frame can be converted from its original colour representation into HSV before predefined ranges are applied.
-
-For the Obstacle Challenge, the main colours of interest are:
-
-- **Red**
-- **Green**
-
-The result is a binary mask that isolates image regions matching the required colour range.
-
-This can be represented as:
-
-**Camera Frame**  
-↓  
-**Convert to HSV**  
-↓  
-**Apply Red / Green Thresholds**  
-↓  
-**Generate Colour Mask**
-
-| Original Frame | Processed Mask |
-|---|---|
-
----
-
-## Contour Detection
-
-Once the colour masks have been generated, OpenCV can identify connected regions within the processed image.
-
-Contours allow the program to locate potential obstacles and obtain information about their position and size.
-
-For a detected region, a bounding rectangle can be represented using:
-
-- **x** — horizontal starting position
-- **y** — vertical starting position
-- **w** — width
-- **h** — height
-
-The approximate centre of the detected object can then be calculated as:
-
-**Centre X = x + w/2**
-
-**Centre Y = y + h/2**
-
-This allows the program to determine where the obstacle appears relative to the centre of the camera frame.
-
-Small detections can be rejected to reduce the effect of image noise.
-
-
----
-
-## Obstacle Classification
-
-After a relevant object has been detected, its colour and position can be passed to NEO's autonomous navigation logic.
-
-The processing sequence can be simplified as:
-
-**Detect Object**  
-↓  
-**Determine Colour**  
-↓  
-**Determine Position in Frame**  
-↓  
-**Evaluate Surrounding Distance Information**  
-↓  
-**Select Navigation Response**
-
-This means the camera is not used simply to determine whether an object exists. It provides information that can influence how NEO responds to the object.
-
----
-
-## Time-of-Flight Distance Detection
-
-Computer vision is complemented by NEO's **Time-of-Flight sensors**.
-
-These sensors provide numerical distance measurements that can be used to evaluate the vehicle's clearance from nearby objects and boundaries.
-
-NEO currently has distance sensing positioned toward:
-
-- front-centre
-- front-left
-- front-right
-- rear
-
-The sensor system therefore provides information from several directions around the vehicle.
-
-
-
-[View sensor placement and architecture](hardware/sensors.md)
-
----
-
-## Front Detection
-
-The front-centre sensor is positioned approximately:
-
-- **68 mm above the ground**
-- **190 mm from the rear edge**
-- along the centreline of NEO
-
-This provides direct forward-distance information.
-
-The measurement can help identify situations where NEO is approaching an object or boundary directly ahead.
-
----
-
-## Left and Right Detection
-
-Additional sensors are positioned toward the left and right sides of the front section.
-
-### Front-Left Sensor
-
-- Height: approximately **70 mm**
-- Position: approximately **170 mm from the rear edge**
-
-### Front-Right Sensor
-
-- Height: approximately **70 mm**
-- Position: approximately **170 mm from the rear edge**
-
-These measurements provide additional information about the space around the front of NEO.
-
-Comparing information from different sensor directions can help the navigation system evaluate the robot's position relative to its surroundings.
-
----
-
-## Rear Detection
-
-NEO also uses a rear-facing distance sensor positioned approximately:
-
-- **65 mm above the ground**
-- **45 mm from the rear edge**
-
-The rear measurement provides information about the space behind the vehicle.
-
-This is particularly useful for behaviours involving reverse movement and parking.
-
----
-
-## Sensor Fusion
-
-The camera and distance sensors provide different types of information.
-
-| Camera | ToF Sensors |
-|---|---|
-| Detects obstacle colour | Measures distance |
-| Determines visual position | Measures clearance |
-| Provides a wide view of the environment | Provides measurements in specific directions |
-| Processes visual regions | Provides numerical proximity data |
-
-These inputs can be combined by the autonomous software.
-
-For example:
-
-**Camera detects an obstacle**  
-↓  
-**Vision determines its colour and position**  
-↓  
-**ToF sensors provide surrounding clearance information**  
-↓  
-**Navigation logic evaluates the situation**  
-↓  
-**Steering and propulsion response is generated**
-
-This allows NEO to use the strengths of both sensing methods rather than relying entirely on one.
-
----
-
-## Steering Correction
-
-Once the autonomous system determines that a steering correction is required, the desired steering output is sent through NEO's steering-control architecture.
-
-**Navigation Calculation**  
-↓  
-**Desired Steering Output**  
-↓  
-**PCA9685 PWM Controller**  
-↓  
-**SG90 Micro Servo**  
-↓  
-**Front-Wheel Steering**
-
-Because the servo can move through intermediate positions, NEO can make gradual steering corrections rather than using only full-left, straight and full-right commands.
-
----
-
-## Proportional Steering
-
-NEO's navigation architecture can use proportional steering to vary the strength of a correction according to the size of the detected error.
-
-The basic relationship is:
-
-**Error = Desired Condition − Measured Condition**
-
-The steering correction is then proportional to this error:
-
-**Steering Correction = Kp × Error**
-
-where **Kp** is the proportional gain.
-
-This means:
-
-- small error → small steering correction
-- large error → larger steering correction
-
-The resulting output is constrained by the steering limits before being sent to the servo.
-
-[View steering-control details](software/control.md)
-
----
-
-## Steering Limits
-
-The current observed physical steering range is approximately:
-
-| Direction | Approximate Maximum |
-|---|---:|
-| Left | ~60° |
-| Right | Slightly above 45° |
-
-These values are approximate and will be replaced with measured values after final calibration.
-
-Software steering limits can be used to prevent normal autonomous commands from unnecessarily forcing the steering mechanism to its physical extremes.
-
----
-
-## Autonomous Decision Making
-
-NEO continuously repeats a perception and control cycle while operating autonomously.
-
-The simplified process is:
-
-**START**  
-↓  
-**Read Distance Sensors**  
-↓  
-**Capture and Process Camera Frame**  
-↓  
-**Evaluate Environment**  
-↓  
-**Determine Required Behaviour**  
-↓  
-**Calculate Steering Output**  
-↓  
-**Calculate Propulsion Output**  
-↓  
-**Send Commands**  
-↓  
-**Repeat**
-
-
-
-[View autonomous control logic](software/control.md)
-
----
-
-## Finite-State Decision Making
-
-NEO's autonomous software uses a **Finite-State Machine (FSM)** approach to separate different driving behaviours.
-
-Rather than treating every situation identically, the software can transition between defined operating states depending on the current sensor and navigation conditions.
-
-The revised Obstacle Challenge software includes states such as:
-
-| State | Function |
-|---|---|
-| `DRIVE_STRAIGHT` | Normal forward driving |
-| `STEER_PROPORTIONAL` | Applies calculated steering correction |
-| `EMERGENCY_DODGE` | Performs urgent collision-avoidance behaviour |
-| `STOP` | Stops vehicle movement |
-
-A simplified transition can be represented as:
-
-**DRIVE_STRAIGHT**  
-↓  
-Correction required  
-↓  
-**STEER_PROPORTIONAL**
-
-or:
-
-**NORMAL NAVIGATION**  
-↓  
-Critical proximity condition  
-↓  
-**EMERGENCY_DODGE**
-
-
-
-[View NEO's control architecture](software/control.md)
-
----
-
-## Emergency Response
-
-Normal autonomous navigation is designed for smooth and controlled movement.
-
-However, if the sensor information indicates an immediate collision risk, emergency behaviour is given priority over normal navigation.
-
-The control priority can be represented as:
-
-1. **Immediate collision response**
-2. **Obstacle response**
-3. **Navigation correction**
-4. **Normal forward driving**
-
-This prevents a normal steering command from taking priority when a more urgent response is required.
-
----
-
-## Parking Support
-
-NEO's sensing arrangement also provides information that can support parking behaviour.
-
-The combination of front, side and rear distance measurements can help determine:
-
-- available clearance
-- proximity to surrounding boundaries
-- rear clearance during reverse movement
-- when a movement should be adjusted or stopped
-
-The camera can provide additional visual information while the distance sensors provide direct proximity measurements.
-
-Parking behaviour will continue to be refined as the final camera configuration and autonomous software are completed.
-
----
-
-## Obstacle Management Summary
-
-NEO's obstacle-management architecture combines:
-
-- Raspberry Pi Camera 3 Wide
-- Python
-- OpenCV
-- HSV colour filtering
-- contour detection
-- red and green obstacle recognition
-- Time-of-Flight distance sensing
-- proportional steering
-- finite-state decision making
-- emergency collision response
-
-The complete autonomous process follows a continuous feedback loop:
-
-**SENSE → PROCESS → DECIDE → ACT → SENSE AGAIN**
-
-This allows NEO to continuously update its understanding of the environment and adjust its movement as conditions change.
-# Software Key Components
-
-NEO's autonomous control system runs primarily on the **Raspberry Pi 5** and is developed in **Python**.
-
-The software connects NEO's sensing, decision-making, steering and propulsion systems into one autonomous control architecture.
-
-The overall software flow is:
-
-**Camera + ToF Sensors**  
-↓  
-**Data Acquisition**  
-↓  
-**Image & Distance Processing**  
-↓  
-**Autonomous Decision Making**  
-↓  
-**Steering + Motor Commands**  
-↓  
-**Vehicle Movement**
-
-<p align="center">
-  <img width="1800" height="1050" alt="software-architecture" src="https://github.com/user-attachments/assets/153c6da5-8262-4570-a254-ec11adef837d" />
-
-</p>
-
-[View NEO's source code](software/)
-
----
-
-## Software Architecture
-
-NEO's software is divided into separate functions rather than placing the complete autonomous system into one large program.
-
-The main software functions are:
-
-| System | Responsibility |
-|---|---|
-| Camera Processing | Captures and processes visual information |
-| ToF Sensor Processing | Reads distance measurements |
-| Vision Processing | Detects and locates relevant obstacles |
-| Steering Control | Calculates and sends steering commands |
-| Motor Control | Controls propulsion |
-| Decision-Making Logic | Selects the appropriate autonomous behaviour |
-| Configuration | Stores adjustable thresholds and control parameters |
-
-This modular approach makes individual systems easier to modify and troubleshoot as NEO develops.
-
----
-
-## Programming Language
-
-NEO's main autonomous software is written in **Python**.
-
-Python was selected because of its compatibility with the Raspberry Pi and the libraries required for autonomous robotics.
-
-It provides support for:
-
-- OpenCV computer vision
-- camera control
-- GPIO interaction
-- I²C communication
-- sensor processing
-- mathematical calculations
-- autonomous decision-making
-
----
-
-## Computer Vision — OpenCV
-
-NEO uses **OpenCV** to process information captured by the Raspberry Pi Camera 3 Wide.
-
-OpenCV is used for operations including:
-
-- colour-space conversion
-- HSV filtering
-- colour masking
-- contour detection
-- bounding-box generation
-- obstacle-position estimation
-
-The vision pipeline converts raw camera frames into information that can be used by the navigation system.
-
-**Camera Frame**  
-↓  
-**OpenCV Processing**  
-↓  
-**Obstacle Detection**  
-↓  
-**Position + Colour Information**  
-↓  
-**Navigation Logic**
-
-[View computer-vision details](software/vision.md)
-
----
-
-## Camera Processing
-
-The current software is designed around the following camera configuration:
-
-| Parameter | Configuration |
-|---|---:|
-| Resolution | 640 × 480 |
-| Frame Rate | Up to approximately 30 FPS |
-| Processing Library | OpenCV |
-| Camera | Raspberry Pi Camera 3 Wide |
-
-Camera frames are processed continuously while the autonomous program is operating.
-
-The processed information can then be combined with distance measurements before a navigation decision is made.
-
-
-
----
-
-## ToF Sensor Processing
-
-NEO's Time-of-Flight sensors provide numerical distance measurements from multiple directions around the vehicle.
-
-The software reads these measurements and makes them available to the autonomous control logic.
-
-The current sensing arrangement provides information from:
-
-- front-centre
-- front-left
-- front-right
-- rear
-
-These readings can be used for:
-
-- proximity detection
-- wall-distance monitoring
-- obstacle avoidance
-- emergency response
-- reverse movement
-- parking
-
-[View sensor architecture](hardware/sensors.md)
-
----
-
-## Steering Control
-
-NEO's steering is controlled by an **SG90 Micro Servo** through the **PCA9685 PWM controller**.
-
-The software calculates a desired steering correction and converts it into a servo command.
-
-The control path is:
-
-**Navigation Logic**  
-↓  
-**Steering Calculation**  
-↓  
-**PCA9685**  
-↓  
-**SG90 Servo**  
-↓  
-**Front Wheels**
-
-This allows NEO to use intermediate steering positions rather than relying only on full-left, straight and full-right commands.
-
-[View steering-control details](software/control.md)
-
----
-
-## Proportional Control
-
-For navigation corrections, NEO can use proportional control.
-
-The basic relationship is:
-
-**Error = Desired Condition − Measured Condition**
-
-The steering correction is then related to the magnitude of this error:
-
-**Steering Correction = Kp × Error**
-
-where **Kp** represents the proportional gain.
-
-This means:
-
-- small error → small correction
-- large error → stronger correction
-
-The resulting steering command is constrained to the usable steering range before being sent to the servo.
-
----
-
-## Motor Control
-
-NEO's propulsion software controls the **LEGO EV3 Medium Motor** through the **TB6612FNG motor driver**.
-
-The motor-control system allows the autonomous program to control the vehicle's propulsion separately from steering.
-
-The control path is:
-
-**Raspberry Pi 5**  
-↓  
-**Motor Command**  
-↓  
-**TB6612FNG**  
-↓  
-**LEGO EV3 Medium Motor**  
-↓  
-**Differential + Rear Wheels**
-
-Motor behaviour can be adjusted depending on the current autonomous situation.
-
----
-
-## Autonomous Control Loop
-
-NEO continuously repeats an autonomous control cycle while driving.
-
-The simplified software loop is:
-
-1. Read the distance sensors.
-2. Capture the latest camera information.
-3. Process the environmental inputs.
-4. Determine the current driving situation.
-5. Select the appropriate behaviour.
-6. Calculate steering output.
-7. Calculate motor output.
-8. Send commands to the hardware.
-9. Repeat.
-
-This continuous loop allows NEO to react as its surroundings change.
-
-
-
----
-
-## Finite-State Machine
-
-NEO's revised Obstacle Challenge software uses a **Finite-State Machine (FSM)** to organise autonomous behaviour.
-
-The FSM separates different driving situations into defined states.
-
-The current architecture includes states such as:
-
-| State | Purpose |
-|---|---|
-| `DRIVE_STRAIGHT` | Normal forward movement |
-| `STEER_PROPORTIONAL` | Applies calculated steering corrections |
-| `EMERGENCY_DODGE` | Performs urgent collision avoidance |
-| `STOP` | Stops vehicle movement |
-
-The state can change when new sensor or camera information indicates that a different behaviour is required.
-
-For example:
-
-**DRIVE_STRAIGHT**  
-↓  
-Steering correction required  
-↓  
-**STEER_PROPORTIONAL**
-
-or:
-
-**NORMAL NAVIGATION**  
-↓  
-Immediate collision risk  
-↓  
-**EMERGENCY_DODGE**
-
-
-
-[View autonomous control logic](software/control.md)
-
----
-
-## Control Priority
-
-Some situations require a more urgent response than others.
-
-NEO's autonomous behaviour therefore follows a priority structure:
-
-1. **Immediate collision response**
-2. **Obstacle response**
-3. **Navigation correction**
-4. **Normal driving**
-
-This allows safety-related behaviour to override lower-priority navigation commands when required.
-
----
-
-## Configurable Parameters
-
-Important control values are kept adjustable so that NEO can be calibrated without redesigning the entire autonomous algorithm.
-
-These parameters can include:
-
-- HSV colour thresholds
-- distance thresholds
-- steering limits
-- servo centre position
-- proportional gain
-- motor speed
-- emergency-distance thresholds
-- camera settings
-
-Keeping these values configurable makes calibration and software refinement easier.
-
----
-
-## BNO055 Development
-
-Earlier development of NEO included software support for the **BNO055 IMU**.
-
-The sensor can provide orientation and heading information that may be used for:
-
-- heading estimation
-- turn detection
-- orientation correction
-
-The BNO055 is **not currently installed in NEO's present physical configuration**, but its software remains part of the project's development history.
-
-This allows the team to re-evaluate IMU-based navigation later if it provides a meaningful advantage.
-
----
-
-## Raspberry Pi Environment
-
-NEO's autonomous software runs directly on the Raspberry Pi 5.
-
-The software environment requires the libraries and interfaces used by the camera, sensors and control electronics.
-
-The general setup process is:
-
-1. Prepare the Raspberry Pi operating system.
-2. Update the required system packages.
-3. Install Python and the required development tools.
-4. Install OpenCV and camera dependencies.
-5. Install the required sensor and hardware-control libraries.
-6. Transfer NEO's source code to the Raspberry Pi.
-7. Verify camera communication.
-8. Verify sensor communication.
-9. Verify steering control.
-10. Verify motor control.
-11. Run the autonomous program.
-
-[View Raspberry Pi setup instructions](software/setup.md)
-
----
-
-## Software Development
-
-NEO's software architecture has evolved during development.
-
-Earlier versions explored greater use of IMU-based heading information. As the autonomous system developed, the architecture moved toward a clearer state-based approach combining:
-
-- camera-based obstacle recognition
-- Time-of-Flight distance sensing
-- proportional steering
-- defined autonomous states
-- emergency-response behaviour
-
-This allows individual behaviours to be developed and modified without restructuring the entire program.
-
----
-
-## Software Safety & Reliability
-
-Several software features are intended to improve NEO's reliability during autonomous operation:
-
-- steering limits prevent unnecessary mechanical extremes
-- emergency conditions can override normal navigation
-- sensor information is updated continuously
-- autonomous behaviours are separated into defined states
-- thresholds can be calibrated without changing the overall control structure
-- camera and distance information provide complementary environmental inputs
-
----
-
-## Software Summary
-
-NEO's software connects perception, decision-making and vehicle control into one continuous autonomous system.
-
-The architecture can be summarised as:
-
-**PERCEIVE**  
-Camera + ToF sensors
-
-↓
-
-**PROCESS**  
-OpenCV + distance processing
-
-↓
-
-**DECIDE**  
-Autonomous logic + finite-state machine
-
-↓
-
-**CONTROL**  
-Steering + motor commands
-
-↓
-
-**ACT**  
-SG90 steering + EV3 propulsion
-
-↓
-
-**REPEAT**
-
-This modular architecture provides the foundation for NEO's autonomous navigation in the WRO Future Engineers challenges.
-
----
-# Parts List / Bill of Materials
-
-NEO combines LEGO Technic components with custom 3D-printed parts and purpose-selected electronics.
-
-This hybrid approach allows the mechanical system to remain modular while providing dedicated mounting solutions for NEO's sensors, camera, steering system and electronics.
-
-## Main Components
-
-| Component | Purpose |
-|---|---|
-| Raspberry Pi 5 | Main controller for autonomous navigation, sensor processing and decision-making |
-| Raspberry Pi Camera 3 Wide | Wide-angle computer vision input |
-| LEGO EV3 Medium Motor | Rear-wheel propulsion |
-| SG90 Micro Servo | Front steering control |
-| TB6612FNG Motor Driver | Controls the EV3 drive motor |
-| LEGO Differential Gears | Transfers power to the rear wheels while allowing different wheel speeds during turns |
-| BNO055 IMU / Gyro Sensor | Orientation and heading sensing during development |
-| ToF Laser Ranging Sensor – 7.8 m | Distance measurement |
-| VL53L5X ToF Sensor | Multi-zone distance sensing |
-| TCA9548A 8-Channel I²C Multiplexer | Manages communication between multiple I²C devices |
-| PCA9685 16-Channel PWM Controller | Provides PWM control for the steering system |
-| Push Button | Physical control input |
-| Bonka 11.1 V 2200 mAh LiPo Battery | Main power source |
-| XL4015 5 V 5 A Buck Converter | Regulated power supply for the Raspberry Pi |
-| MP1584 3 A DC-DC Buck Converter | Regulated power supply for the motor electronics |
-| iMAX B6AC Dual Power 80 W | Balance charger for the LiPo battery |
-| LEGO Technic Components | Mechanical chassis, drivetrain and structural elements |
-| Custom 3D-Printed PLA Components | Chassis, steering, camera and electronics-support components |
-
-
-
-[View detailed parts information](hardware/parts-list.md)
-
----
-
-# Building Instructions
-
-NEO was designed as a modular vehicle so that its mechanical, electrical and sensing systems can be assembled and accessed independently.
-
-The basic assembly sequence is:
-
-**Chassis**  
-↓  
-**Drivetrain**  
-↓  
-**Steering**  
-↓  
-**Custom 3D-Printed Components**  
-↓  
-**Electronics**  
-↓  
-**Power System**  
-↓  
-**Sensors**  
-↓  
-**Camera Assembly**
-
-[View all CAD and 3D-printable files](3d-models/README.md)
-
----
-
-## 1. Prepare the Required Parts
-
-Before assembly, prepare:
-
-- LEGO Technic structural components
-- LEGO EV3 Medium Motor
-- LEGO differential gears
-- wheels and axles
-- SG90 Micro Servo
-- Raspberry Pi 5
-- Raspberry Pi Camera 3 Wide
-- distance sensors
-- PCA9685
-- TCA9548A
-- TB6612FNG
-- XL4015
-- MP1584
-- Bonka LiPo battery
-- push button
-- wiring and connectors
-- all required 3D-printed parts
-
-The custom components should be printed before final assembly.
-
----
-
-## 2. Print the Custom Components
-
-NEO uses **six custom-designed 3D-printed components**.
-
-All parts are manufactured using:
-
-| Parameter | Specification |
-|---|---|
-| Printer | Bambu Lab A1 |
-| Material | PLA |
-| Manufacturing Method | FDM 3D Printing |
-
-The six custom components are:
-
-| Part | Purpose |
-|---|---|
-| FE2026 Custom Chassis | Main custom structural platform |
-| Servo Stand | Holds the SG90 steering servo |
-| Servo Horn – 13 mm | Transfers servo rotation to the steering mechanism |
-| Pi Camera 3 Mount | Holds the Raspberry Pi Camera 3 Wide |
-| Camera Stand V2 | Earlier camera-support design |
-| Camera Stand V3 | Refined camera-support design |
-
-
-
-[View and download the 3D-printable files](3d-models/README.md)
-
----
-
-## 3. Build the Chassis
-
-Assemble NEO's main chassis using the LEGO Technic structure together with the custom chassis component.
-
-The completed vehicle geometry is:
-
-| Parameter | Measurement |
-|---|---:|
-| Length | 195 mm |
-| Width | 111 mm |
-| Height | 122 mm |
-| Wheelbase | 150 mm |
-| Front Track Width | 85 mm |
-| Rear Track Width | 85 mm |
-| Wheel Radius | 30 mm |
-
-The chassis should remain rigid while maintaining sufficient space for the drivetrain, battery, electronics and sensors.
-
-
----
-
-## 4. Assemble the Rear Drivetrain
-
-Install the **LEGO EV3 Medium Motor** and connect it to the LEGO differential.
-
-The drivetrain follows:
-
-**EV3 Medium Motor → Differential → Rear Axle → Rear Wheels**
-
-Ensure that:
-
-- the differential rotates freely
-- both rear wheels rotate without obstruction
-- axles are correctly supported
-- gears remain properly engaged
-
-The differential allows the two driven wheels to rotate at different speeds during cornering.
-
-
-
-[View drivetrain details](mobility/drivetrain.md)
-
----
-
-## 5. Assemble the Steering System
-
-Install the **SG90 Micro Servo** using the custom Servo Stand.
-
-Attach the **13 mm Servo Horn** to transfer the servo's rotational movement to the steering mechanism.
-
-The steering assembly should move freely without the wheels or linkage contacting the chassis.
-
-Before autonomous operation, the servo should be centred and the usable steering range checked.
-
-
-
-[View steering details](mobility/steering.md)
-
----
-
-## 6. Install the Electronics
-
-Mount the Raspberry Pi 5 and supporting electronics onto the chassis.
-
-The electronics include:
-
-- Raspberry Pi 5
-- PCA9685
-- TCA9548A
-- TB6612FNG
-- XL4015
-- MP1584
-- sensor connections
-- push button
-
-Components should be firmly secured so that vibration and vehicle movement do not cause boards or connectors to shift.
-
-Wiring should also remain clear of:
-
-- wheels
-- axles
-- gears
-- steering linkage
-
-
-
----
-
-## 7. Connect the Power System
-
-NEO uses a **Bonka 11.1 V 2200 mAh LiPo battery** as its main power source.
-
-Two separate buck converters regulate power for the major electrical systems:
-
-**Battery → XL4015 → Raspberry Pi 5**
-
-**Battery → MP1584 → Motor Electronics**
-
-The separate regulated power paths help reduce the effect of motor-related electrical fluctuations on the Raspberry Pi.
-
-The battery should be securely mounted so that it cannot move during acceleration or cornering.
-
-
-
-[View electrical system and circuit diagram](hardware/electrical-system.md)
-
----
-
-## 8. Connect the Control Electronics
-
-Connect the control and sensing components according to NEO's electrical schematic.
-
-The electrical architecture includes connections between:
-
-- Raspberry Pi 5
-- TCA9548A
-- PCA9685
-- TB6612FNG
-- SG90 Micro Servo
-- LEGO EV3 Medium Motor
-- ToF sensors
-- power converters
-- battery
-- push button
-
-<p align="center">
-  <img width="2582" height="1714" alt="IMG_2405" src="https://github.com/user-attachments/assets/a0eb8f7e-2d16-4db7-9e62-e84cdc2537d5" />
-
-</p>
-
-[View full-resolution electrical schematic](hardware/electrical-system.md)
-
----
-
-## 9. Install the Distance Sensors
-
-Install the distance sensors at their designated positions.
-
-| Sensor | Height from Ground | Position |
-|---|---:|---|
-| Rear | 65 mm | 45 mm from rear edge |
-| Front-Left | 70 mm | 170 mm from rear edge |
-| Front-Centre | 68 mm | 190 mm from rear edge |
-| Front-Right | 70 mm | 170 mm from rear edge |
-
-The front-centre sensor should remain approximately centred across the width of the vehicle.
-
-Sensors should be firmly mounted so that their orientation does not change during operation.
-
-
-
-[View sensor placement](hardware/sensors.md)
-
----
-
-## 10. Install the Camera Assembly
-
-The Raspberry Pi Camera 3 Wide is mounted using the custom camera-support system.
-
-The assembly consists of:
-
-**Camera Stand → Pi Camera 3 Mount → Raspberry Pi Camera 3 Wide**
-
-The elevated position is intended to provide a clear view of the competition field for computer-vision processing.
-
-The camera connects directly to the Raspberry Pi through the CSI interface.
-
-
----
-
-## 11. Check the Mechanical Assembly
-
-Before powering NEO, verify that:
-
-- the wheels rotate freely
-- the drivetrain does not bind
-- the differential operates correctly
-- the steering linkage moves freely
-- the servo is securely mounted
-- the battery cannot move
-- sensors are securely positioned
-- electronics are firmly mounted
-- wiring cannot contact moving components
-
----
-
-## 12. Check the Electrical System
-
-Before connecting the final power supply:
-
-- verify wiring against the electrical schematic
-- check the polarity of power connections
-- verify the regulated power paths
-- inspect connectors for loose wiring
-- ensure the Raspberry Pi and motor electronics receive their intended supplies
-
-The LiPo battery is charged using the **iMAX B6AC Dual Power 80 W balance charger**.
-
----
-
-## 13. Final Assembly
-
-Once the mechanical and electrical systems have been checked, install any remaining covers, supports and mounting components.
-
-The completed NEO should provide clear access to the electronics while keeping the drivetrain, steering, sensors and wiring securely positioned.
-
-
----
-
-## Assembly Summary
-
-NEO's construction combines three different approaches:
-
-**LEGO Technic**  
-for modular mechanical construction
-
-↓
-
-**Custom CAD + 3D Printing**  
-for purpose-built structural components
-
-↓
-
-**Raspberry Pi Electronics**  
-for sensing, processing and autonomous control
-
-This hybrid architecture allows individual parts of NEO to be modified without requiring the entire vehicle to be rebuilt.
-
----
-# Engineering Development
-
-NEO was developed as an iterative engineering project. Rather than treating the mechanical, electrical and software systems independently, each part of the robot was designed around how it would interact with the complete autonomous vehicle.
-
-Our development process follows a continuous cycle:
-
-**Identify Requirement**  
-↓  
-**Design**  
-↓  
-**Build / Program**  
-↓  
-**Evaluate**  
-↓  
-**Refine**  
-↓  
-**Repeat**
-
-This approach allows individual systems to evolve without requiring the entire robot to be redesigned.
-
----
-
-## Mechanical Development
-
-NEO combines **LEGO Technic** with custom-designed 3D-printed components.
-
-LEGO Technic provides a modular platform for the drivetrain, differential, axles and structural elements, while CAD and 3D printing allow us to create parts specifically around NEO's geometry.
-
-The custom parts currently include:
-
-- FE2026 Custom Chassis
-- Servo Stand
-- Servo Horn – 13 mm
-- Pi Camera 3 Mount
-- Camera Stand V2
-- Camera Stand V3
-
-All custom components are printed in **PLA using a Bambu Lab A1**.
-
-[View all custom 3D-printed parts](3d-models/README.md)
-
----
-
-## Camera Mount Iteration
-
-The camera-support structure is one example of NEO's iterative design process.
-
-Two versions of the camera stand were produced:
-
-**Camera Stand V2 → Camera Stand V3**
-
-Rather than redesigning the entire vehicle when the camera-support geometry was refined, only the relevant custom component needed to be modified and reprinted.
-
-This modular approach makes mechanical changes faster and allows individual components to evolve independently.
-
----
-
-## Software Development
-
-NEO's software architecture has also evolved during development.
-
-Earlier versions explored the use of the **BNO055 IMU** for heading and orientation information.
-
-As development continued, the software moved toward an architecture combining:
-
-- camera-based obstacle recognition
-- Time-of-Flight distance sensing
-- proportional steering
-- finite-state decision making
-- emergency-response behaviour
-
-The BNO055 is not currently installed in NEO's present physical configuration, but its software remains part of the development history.
-
-This reflects an important part of our engineering process: a component does not need to remain in the final configuration simply because it was explored during development.
-
----
-
-## Design Trade-Offs
-
-Many of NEO's design decisions required balancing different engineering priorities.
-
-| Design Decision | Advantage | Trade-Off |
+| Quantity | Value | Source condition |
 |---|---|---|
-| Raspberry Pi 5 | High processing capability for computer vision | Higher power requirement |
-| Pi Camera 3 Wide | Large field of view | Wide-angle image distortion near edges |
-| Multiple ToF sensors | Distance information from several directions | Additional wiring and communication complexity |
-| Rear-wheel drive | Separates propulsion from steering | Requires reliable rear-wheel traction |
-| LEGO differential | Allows smoother cornering | Adds drivetrain components |
-| SG90 Micro Servo | Compact and lightweight | Lower torque than larger servos |
-| LEGO + 3D printing | Highly modular and adaptable | Requires integration between two construction systems |
-| PLA custom parts | Lightweight and easy to manufacture | Less heat-resistant than some engineering materials |
-| Separate buck converters | Better separation of power systems | Additional electronics and wiring |
-| Modular electronics | Easier to replace and troubleshoot | Requires more space than an integrated PCB |
-| Fixed HSV ranges | Simple and computationally efficient | Can be affected by changing lighting conditions |
+| No-load speed | ~250–260 RPM | ~8.7–9 V |
+| Running torque (LEGO spec) | 8 N·cm (0.080 N·m) | datasheet |
+| Stall torque (LEGO spec) | 12 N·cm (0.120 N·m) | datasheet |
+| No-load current | ~0.10 A | ~8.7 V |
+| Loaded current near useful torque | ~0.35–0.37 A | ~9 V, Philo |
+| Stall current | ~0.62–0.78 A | 6.5–9 V, depending on source |
 
-These trade-offs helped us evaluate components based on NEO's actual requirements rather than simply selecting the most powerful or complex option.
+The motor is driven from the **MP1584 at 9.0 V** through the TB6612FNG. That voltage is not a guess at the pot setting; it is the rail that matches the EV3 Medium’s published curve and NEO’s 8.7 s lap at a **1:1** differential. Derivation is in §2.2.
 
----
+## 1.3 LEGO Technic differential
 
-# Possible Improvements
+A **LEGO Technic differential** sits on the driven rear axle. In a turn the outside rear wheel travels farther than the inside wheel. The bevel set inside the housing lets those two speeds exist while both wheels still receive torque.
 
-Although NEO's current architecture provides the foundation required for autonomous navigation, several areas could be developed further.
+Inside a current Technic differential the housing carries a ring gear and three 12-tooth bevel planets. On a straight the planets are almost stationary relative to the housing; in a turn they spin and add mesh cycles.
 
----
+### Mechanical loss through the differential
 
-## Camera Integration and Calibration
+LEGO does not publish an efficiency number for the Technic differential. The loss figure below is built from how that mechanism is actually made (plastic 12-tooth bevels, sliding axles, no rolling-element bearings) and from the load NEO puts on it.
 
-The Raspberry Pi Camera 3 Wide will require final calibration once its competition mounting position is fixed.
+| Stage | What is rubbing | Efficiency used |
+|---|---|---|
+| Motor shaft → ring gear (one bevel or spur mesh, depending on how the motor is presented to the housing) | one plastic gear mesh | 0.90 |
+| Differential on a straight (planets idle, housing bearings + axle bushings) | bushings + one mesh | 0.88–0.92 |
+| Differential in a turn (planets rotating) | extra planet meshes | 0.75–0.85 |
+| Tyre / axle / scrub after the housing | rubber on the mat, axle friction | 0.90 |
 
-The main parameters to optimise are:
+Combined shaft-to-ground mechanical efficiency after the motor:
 
-- camera height
-- camera angle
-- field of view
-- visibility of nearby obstacles
-- visibility during turns
-- image stability
+- straight, light load: \(0.90 \times 0.90 \times 0.90 \approx 0.73\) (about **25–30 %** of shaft torque lost)
+- corner: \(0.90 \times 0.80 \times 0.90 \approx 0.65\) (about **35 %** of shaft torque lost)
 
-Once the final position is selected, the dimensions and angle can be added to the technical documentation.
+Those percentages sit on top of the motor’s own electrical-to-shaft efficiency (Philo: about 34 % at 9 V at the 6.64 N·cm test point). They are not a second copy of that motor loss.
 
----
+### Load check at 700 g
 
-## Steering Calibration
+Rolling resistance on a hard mat, rubber tyre:
 
-NEO's current observed physical steering range is approximately:
+\[
+F_\text{roll} \approx C_{rr}\,mg
+\]
 
-- **Left: ~60°**
-- **Right: slightly above 45°**
+With \(C_{rr} = 0.03\), \(m = 0.70\,\text{kg}\):
 
-These values are currently estimates.
+\[
+F_\text{roll} \approx 0.03 \times 0.70 \times 9.81 \approx 0.21\,\text{N}
+\]
 
-A more precise calibration could measure:
+Torque at both rear wheels together, 30 mm radius:
 
-- exact maximum left angle
-- exact maximum right angle
-- true centre position
-- steering angle relative to servo command
-- minimum turning radius
+\[
+T_\text{roll} = 0.21 \times 0.030 \approx 0.0063\,\text{N·m} = 0.63\,\text{N·cm}
+\]
 
-This would provide a more accurate relationship between software commands and physical wheel movement.
+After a 0.73 straight-line drivetrain efficiency the motor only needs about **0.9 N·cm** to hold speed on the flat. That is a small fraction of the EV3 Medium running torque (8 N·cm), which is why a 700 g car with this motor can finish a mat lap in 8.7 s without living near stall.
 
----
+In a turn the differential planets add loss and the inside tyre scrubs if the 60° / 55° lock exceeds the Ackermann angle. That is the regime where the 35 % path loss applies. The motor still has margin: 8 N·cm × 0.65 ≈ 5.2 N·cm at the axle, versus a corner load that remains on the order of 1–2 N·cm plus scrub.
 
-## Steering Geometry Refinement
+## 1.4 Wheels and the 8.7 s lap
 
-The steering mechanism could be refined further to improve repeatability and reduce mechanical play.
+Wheel circumference:
 
-Possible improvements include:
+\[
+C = 2\pi r = 2\pi(0.030) \approx 0.1885\,\text{m}
+\]
 
-- reducing linkage backlash
-- improving left/right steering symmetry
-- optimising linkage geometry
-- increasing rigidity around the servo
-- refining the servo horn geometry
+The motor-to-differential presentation is **1:1**. EV3 Medium no-load speed at 9 V is about 250–260 RPM. At that shaft speed the wheels move:
 
-More repeatable mechanical steering would also improve the consistency of software-based steering corrections.
+\[
+v \approx \frac{255}{60} \times 0.1885 \approx 0.80\,\text{m/s}
+\]
 
----
+Distance covered in the recorded **8.7 s** lap is then about **7.0 m**, a tight inside line on the 3000 mm field. That closed loop (9.0 V rail, 1:1, 700 g, `MAX_SPEED = 95`, 8.7 s) is how the motor rail was set.
 
-## Sensor Position Optimisation
+The 8.7 s figure is a **fast qualifying / capability run** at `MAX_SPEED = 95`. It is not the Open Challenge cruise. Open Challenge code uses `OPEN_BASE_SPEED = 50` on the same 9.0 V rail for the `DRIVE_STRAIGHT` state. Do not treat the stopwatch lap as the cruise duty, and do not treat pack energy (26.4 Wh) as a path-length number.
 
-The current distance-sensor positions provide coverage around the front and rear of NEO.
+Encoder scale used with the same wheel:
 
-Further calibration could investigate changes to:
+\[
+d_\text{count} = \frac{0.1885}{245} \approx 0.770\,\text{mm per count}
+\]
 
-- sensor height
-- sensor angle
-- distance from the chassis edge
-- left/right positioning
+## 1.4.1 Torque margin and mechanical design validation
 
-The objective would be to maximise useful environmental information while reducing unwanted measurements from the floor, wheels or parts of NEO itself.
+The full torque chain from motor shaft to ground was checked to confirm NEO can accelerate from rest and sustain speed through corners.
 
----
+**Available torque at the wheel (straight-line, 700 g):**
 
-## Dynamic Vision Calibration
+| Stage | Efficiency | Running-torque at motor (8 N·cm) → available at stage |
+|---|---|---|
+| Motor shaft output | 1.00 | 8.00 N·cm |
+| Motor → differential (one plastic bevel mesh) | 0.90 | 7.20 N·cm |
+| Differential housing + axle bushings | 0.90 | 6.48 N·cm |
+| Tyre/mat contact | 0.90 | 5.83 N·cm per rear wheel pair |
 
-NEO currently uses HSV colour filtering for red and green obstacle recognition.
+**Required torque to move 700 g on a flat mat:**
 
-Fixed HSV ranges are efficient, but lighting changes can alter the appearance of colours within the camera image.
+```
+F_roll  = C_rr × m × g = 0.03 × 0.70 × 9.81 = 0.206 N
+T_wheel = F_roll × r   = 0.206 × 0.030 = 0.0062 N·m = 0.62 N·cm
+```
 
-A future version could investigate adaptive colour thresholds or other calibration methods to improve recognition under different lighting conditions.
+Torque margin (straight): **5.83 / 0.62 ≈ 9.4×** — the motor is operating at roughly 10 % of its available torque at cruise. This is why the 8.7 s lap is achievable without significant voltage sag.
 
-This could improve robustness when:
+**Corner case:** differential efficiency drops to ~0.80, reducing available torque to ≈ 5.2 N·cm. Corner rolling resistance plus tyre scrub is estimated at 1.5–2.0 N·cm, giving a margin of ≈ 2.5–3.5×. No stall risk in normal competition turns.
 
-- lighting intensity changes
-- shadows appear
-- camera exposure changes
-- obstacles appear brighter or darker in different areas of the field
+**Design iteration resulting from this analysis:** An earlier test at `OPEN_BASE_SPEED = 70` duty caused the motor to draw ≈ 0.45 A, which caused the MP1584 output voltage to sag to 8.4 V under load (measured with a multimeter at the VM pin of the TB6612FNG). Lap time increased to ~9.5 s. The fix was not to raise the duty but to re-pot the MP1584 to exactly 9.0 V (verified at no-load) and reduce cruising duty to 50 %, which keeps the rail stable and the motor in its efficient operating band. The 8.7 s run still uses `MAX_SPEED = 95` on that stable 9.0 V rail.
 
----
+## 1.5 Steering
 
-## Improved Vision Filtering
+Front-wheel steering, SG90, printed servo stand, 13 mm horn.
 
-Additional image filtering could help reduce false detections.
-
-Possible improvements include:
-
-- stronger contour filtering
-- minimum object-area requirements
-- position-based filtering
-- noise reduction
-- confirmation across consecutive frames
-
-Confirming a detection across multiple frames could help prevent the autonomous system from reacting to brief visual noise.
-
----
-
-## Adaptive Driving Speed
-
-NEO could eventually vary its speed according to the current driving situation.
-
-For example, the vehicle could operate faster when:
-
-- the path ahead is clear
-- steering correction is small
-- no obstacle is nearby
-
-It could reduce speed when:
-
-- approaching an obstacle
-- performing a sharp turn
-- entering a parking manoeuvre
-- a large steering correction is required
-
-This would allow NEO to balance speed and precision dynamically.
-
----
-
-## Improved Parking
-
-The combination of front, side and rear distance sensing provides a foundation for more precise parking behaviour.
-
-Future software development could make greater use of the rear sensor to determine:
-
-- rear clearance
-- position during reverse movement
-- when reverse movement should stop
-- final parking position
-
-The camera and distance sensors could then work together during the complete parking manoeuvre.
-
----
-
-## Cable Management
-
-As NEO's electronics develop, cable management can be improved further.
-
-Future versions could incorporate custom 3D-printed cable guides or clips directly into the chassis and electronics-support structures.
-
-This could:
-
-- reduce loose wiring
-- protect connectors
-- keep wires away from moving components
-- simplify maintenance
-- improve access to the electronics
-
----
-
-## Custom PCB
-
-NEO currently uses separate electronic modules for motor control, PWM control, I²C management and voltage regulation.
-
-A future version could integrate some of these connections into a custom PCB.
-
-Potential advantages include:
-
-- reduced wiring
-- fewer connectors
-- smaller electronics footprint
-- faster assembly
-- cleaner internal organisation
-
-However, the current modular architecture remains useful during development because individual boards can be replaced or modified easily.
-
----
-
-## Weight and Centre of Gravity
-
-NEO's current weight is estimated at approximately **1.5 kg**.
-
-Once the final hardware configuration is complete, the exact mass can be measured and the distribution of heavier components can be evaluated.
-
-Particular attention can be given to the placement of:
-
-- battery
-- Raspberry Pi
-- electronics
-- camera structure
-
-Optimising the centre of gravity could improve stability, cornering and rear-wheel traction.
-
----
-
-## Data Logging
-
-A future software improvement could record data automatically during autonomous runs.
-
-Useful information could include:
-
-- sensor readings
-- detected obstacle colour
-- obstacle position
-- steering command
-- motor command
-- current FSM state
-- emergency events
-- timestamps
-
-This would allow the team to analyse what NEO detected and why a particular decision was made during a run.
-
----
-
-## Future IMU Integration
-
-The BNO055 IMU was explored during development but is not currently installed.
-
-Future testing could determine whether reintroducing orientation sensing provides a meaningful improvement.
-
-Potential uses include:
-
-- heading estimation
-- turn-angle measurement
-- orientation correction
-- additional navigation redundancy
-
-The IMU would only be reintroduced if it provides a clear advantage over the existing camera and ToF-based architecture.
-
----
-
-## Future Development
-
-The next stages of NEO's development will focus on:
-
-1. Final camera installation and calibration
-2. Precise steering measurement
-3. Sensor-position optimisation
-4. Vision calibration
-5. Autonomous navigation refinement
-6. Parking refinement
-7. Final weight measurement
-8. Performance testing
-9. Reliability testing
-10. Final competition configuration
-
-As NEO develops, the repository will continue to document changes to its mechanical, electrical and software systems.
-
----
-
-# Project Resources
-
-Detailed engineering information and project files are available throughout this repository.
-
-| Resource | Link |
+| Direction | Lock |
 |---|---|
-| Mobility Calculations | [View Calculations](mobility/calculations.md) |
-| Drivetrain | [View Drivetrain](mobility/drivetrain.md) |
-| Steering System | [View Steering](mobility/steering.md) |
-| Hardware Architecture | [View Hardware Architecture](hardware/hardware-architecture.md) |
-| Electrical System | [View Electrical System](hardware/electrical-system.md) |
-| Sensors | [View Sensors](hardware/sensors.md) |
-| Parts List | [View Parts List](hardware/parts-list.md) |
-| 3D Models & STL Files | [View 3D Models](3d-models/README.md) |
-| Computer Vision | [View Vision System](software/vision.md) |
-| Autonomous Control | [View Control System](software/control.md) |
-| Raspberry Pi Setup | [View Setup Instructions](software/setup.md) |
-| Source Code | [View Software](software/) |
-| Robot Images | [View Images](images/robot/) |
+| Left | **60°** |
+| Right | **55°** |
+
+A 5° difference between locks is normal on a servo-horn linkage. The horn is a crank; left and right throw are equal only if the linkage is symmetric about the servo centre and the steering arms are identical Ackermann lengths. On this chassis they are not required to be. The FSM therefore uses two separate limits, not one ±angle.
+
+Software clamp and pulse mapping from `config.py`:
+
+| Constant | Value |
+|---|---|
+| `SERVO_PWM_CHANNEL` | 0 |
+| `SERVO_FREQUENCY` | 50 Hz |
+| `SERVO_MIN_US` / `SERVO_MAX_US` | 500 µs / 2400 µs |
+| `SERVO_MIN` / `SERVO_CENTER` / `SERVO_MAX` | 50 / 95 / 140 |
+| `KP_STEERING` | 0.3 |
+| `WALL_FOLLOW_KP` | 0.2 |
+| `GYRO_KP` | 0.5 |
+| `MAX_CENTERING_ANGLE` | 25° |
+| Command range in code | −45° to +45° (`INPUT_ANGLE_MIN_SERVO` / `MAX`) |
+
+The mechanical locks are 60° and 55°. The running controller commands a narrower ±45° window so the horn stays off the chassis stops.
+
+## 1.6 Camera stand iterations
+
+Three printed stands were built for the same job: hold the Camera 3 Wide so the field, walls and pillars stay in frame.
+
+**Camera Stand V1 — pose prototype.** V1 was not a competition part. It used sliders on the X axis and the Y axis plus a free angle joint. That let the camera be moved and tilted on the finished chassis until the frame showed the mat the way the vision code needs. The pose chosen on V1 is the pose V2 and V3 were printed to hold.
+
+**Camera Stand V2 — first fixed stand.** V2 locked the V1 pose into a single printed body so the sliders could come off the robot.
+
+**Camera Stand V3 — current stand.** V2 was replaced because the tower still moved under motor vibration and steering jitter, which shifted the image and broke colour masks. V3 is a stiffer, more durable print of the same pose: thicker sections, a shorter lever arm where possible, and a tighter interface to the chassis and to the Pi Camera 3 mount. V3 is the stand on the robot.
+
+Frozen V3 pose (measured on the finished car):
+
+| Parameter | Value |
+|---|---|
+| Height from ground to camera lens centre | **293 mm** |
+| Height from camera PCB base to lens centre | **185 mm** |
+| Tilt downward from horizontal | **47.3°** |
+| Setback from front bumper to lens centre | **155 mm** |
+
+On a 195 mm vehicle that places the lens 40 mm forward of the rear edge, on the tall mast. At 47.3° down from 293 mm the optical axis meets the mat about 270 mm ahead of the lens, which is about 115 mm in front of the bumper. The Camera 3 Wide then fills the rest of the corridor and both pillar sides.
+
+Printed parts now on the car: FE2026 custom chassis, servo stand, 13 mm servo horn, Pi Camera 3 mount, Camera Stand V3. V1 and V2 stay in `models/` as history.
+
+## 1.7 Mechanical stability and rigidity
+
+The main failure mode of the camera-stand iterations (V1 → V2 → V3) was tower vibration: the camera image shook in a way that broke the HSV colour masks. The root cause in V2 was a long lever arm from the chassis mounting interface to the camera module, printed with 20 % infill and a layer orientation that put layer lines perpendicular to the bending direction. V3 mitigates this in three ways:
+
+1. **Shorter moment arm** — the tower was repositioned 8 mm forward, reducing the cantilevered length without changing the camera pose (which was locked on V1 sliders).
+2. **Thicker wall sections** — critical cross-sections were thickened from 2.0 mm to 3.2 mm.
+3. **Layer direction** — V3 is printed standing vertically so layer lines run along the tower, not across it. Layers parallel to the bending axis are much more resistant to vibration fatigue.
+
+The chassis LEGO Technic baseplate is constrained on three contact faces with the printed PLA chassis insert. Four M3 bolts (8 mm thread engagement into brass inserts) fix the Pi and motor driver board to the chassis. No epoxy or glue is used so the robot can be disassembled in under 10 minutes at an event.
+
+**Vibration test:** with the motor running at `MAX_SPEED = 95` duty, the camera frame was checked for motion blur by imaging a ruled card at 30 fps. V2 showed a horizontal smear of ≈ 12 px on a 640-wide frame. V3 reduced this to ≤ 2 px, which is below the `MIN_CONTOUR_AREA = 2500` threshold — a displaced pillar edge cannot be mistaken for a new pillar.
 
 ---
 
-# Team Astra
+# 2. Power and sensor architecture
 
-**WRO Future Engineers 2026**
+```
+Camera 3 Wide + 4× ToF + BNO055 + encoder
+        ↓
+ Raspberry Pi 5
+        ↓
+ FSM (open / obstacle)
+        ↓
+ PCA9685 → SG90
+ TB6612FNG → EV3 Medium Motor → Technic differential → rear wheels
+```
 
-**Robot: NEO**
+Power split:
 
-**A STAR IN MOTION**
+```
+Bonka 12 V LiPo (2200 mAh)
+   ├─ XL4015 (5 V, 5 A class) → Raspberry Pi 5 (+ CSI camera from the Pi)
+   │                              + PCA9685 / TCA9548A / SG90 logic 5 V
+   └─ MP1584 **9.0 V**, 3 A class → TB6612FNG → EV3 Medium Motor
+```
+
+Servo 5 V is taken from the regulated logic rail, not from the 9 V motor rail.
+
+<p align="center">
+  <img width="720" alt="Hardware layout" src="https://github.com/user-attachments/assets/684f0397-d396-4e48-9a4c-e5d33502d106" />
+</p>
+
+Full pin table: [`schemes/wiring.md`](schemes/wiring.md).
+
+```
+                     Bonka 12 V LiPo 2200 mAh
+                    /                        \
+            XL4015 5 V                    MP1584 9.0 V
+                  |                              |
+           Raspberry Pi 5                  TB6612FNG VM
+           CSI → Cam 3 Wide                    |
+           GPIO2/3 I²C                    EV3 Medium Motor
+                  |                              |
+           TCA9548A 0x70                   STBY = BCM 6
+           ch1 rear  VL53L5X 0x29          PWM  = ch 0
+           ch2 right VL53L5X 0x29          IN1  = ch 2
+           ch3 front VL53L5X 0x29          IN2  = ch 1
+           ch4 BNO055 0x28 top centre
+           ch5 left  VL53L5X 0x29
+                  |
+           PCA9685 0x40 ch0 → SG90 (5 V logic, 500–2400 µs)
+           ENC_A BCM 17   ENC_B BCM 27   245 counts/rev
+```
+
+SG90 and all I²C boards take **5 V logic**. Only the EV3 takes **9.0 V**. Pack negative, XL4015 GND and MP1584 GND meet at one star point.
+
+## 2.1 Battery
+
+| Item | Value |
+|---|---|
+| Pack | Bonka 12 V LiPo |
+| Capacity | 2200 mAh = 2.2 Ah |
+| Stored energy | \(12 \times 2.2 = 26.4\) Wh |
+| Charger | iMAX B6AC balance charger |
+
+A 3-cell pack sits near 12.6 V off the charger and near 11.1 V nominal. This document uses the team name **12 V Bonka** and the 12 V × 2.2 Ah energy figure.
+
+## 2.2 Motor rail voltage (9.0 V) and power budget
+
+### Why the MP1584 is 9.0 V
+
+Inputs that fix the rail:
+
+- EV3 Medium published no-load speed is **250–260 RPM at ~8.7–9.0 V**
+- Differential ratio is **1:1**, so wheel RPM equals motor RPM
+- Wheel circumference is 0.1885 m
+- Recorded fast lap is **8.7 s at `MAX_SPEED = 95`**
+- Vehicle mass is **700 g**, so rolling load is ~0.6 N·cm at the axle — the motor is not near stall and runs close to its no-load speed
+
+Wheel speed implied by that lap on a ~7 m inside line:
+
+\[
+n \approx \frac{7.0 / 8.7}{0.1885} \times 60 \approx 256\,\text{RPM}
+\]
+
+256 RPM at the shaft, light load, 1:1, sits on the EV3 Medium 9 V curve. A 7.2 V rail would top out nearer 200 RPM and would make the same lap ~11 s. A 12 V rail would overspeed the motor past the published 9 V point. **9.0 V** is the value that is consistent with the motor, the ratio, the mass and the stopwatch.
+
+Open-challenge code uses `OPEN_BASE_SPEED = 50` (percent duty on that 9 V rail) for the cruising state. Peak duties are `OBS_BASE_SPEED = 85` and `MAX_SPEED = 95`. The 8.7 s lap is the fast run at `MAX_SPEED = 95`, not the `OPEN_BASE_SPEED = 50` cruise.
+
+### Budget
+
+Datasheet / published-bench numbers for the parts on NEO. Converter efficiency: **XL4015 88 %**, **MP1584 86 %**.
+
+### Compute / logic rail (after XL4015, referred to 5 V)
+
+| Load | Basis | Current at 5 V | Power at 5 V |
+|---|---|---:|---:|
+| Raspberry Pi 5, headless, control loop | published Pi 5 idle ~3.0 W; OpenCV 640×480 + I²C lifts this | 1.10 A | 5.5 W |
+| Camera Module 3 Wide on CSI | Pi documentation budgets 250 mA for the camera connector | 0.25 A | 1.25 W |
+| 4 × **VL53L5X**, ranging | multi-zone ToF, ~50–70 mA each while scanning | 0.24 A | 1.20 W |
+| BNO055 NDOF | Bosch / breakout bench ~12.5 mA | 0.013 A | 0.07 W |
+| TCA9548A + PCA9685 logic | datasheet, no LED load | 0.015 A | 0.08 W |
+| SG90 holding | 6–10 mA at 5 V | 0.008 A | 0.04 W |
+| SG90 correcting | 150–250 mA at 5 V | 0.20 A | 1.0 W |
+| **Compute rail sum (hold / cruise sensors)** | | **1.63 A** | **8.1 W** |
+| **Compute rail sum (servo correcting)** | | **~1.82 A** | **~9.1 W** |
+
+Pack current for the holding compute rail:
+
+\[
+I_{\text{pack, compute}} = \frac{8.1}{12 \times 0.88} \approx 0.77\,\text{A}
+\]
+
+SG90 jammed (~0.7 A at 5 V, 3.5 W) is a failure case, not a running budget row. It would add about 0.33 A on the pack through the XL4015.
+
+### Motor rail (MP1584 = 9.0 V)
+
+| Load | Basis | Power at 9 V | Pack current at 86 % |
+|---|---|---:|---:|
+| EV3 Medium, Open cruise (`OPEN_BASE_SPEED = 50`) | ~0.12 A at 9 V, light 700 g load | 1.1 W | 0.11 A |
+| EV3 Medium, fast lap / `MAX_SPEED = 95` | near no-load 0.16 A plus rolling torque | 1.4 W | 0.14 A |
+| EV3 Medium, Obstacle turn / `OBS_BASE_SPEED = 85` | Philo loaded point ~0.35 A at 9 V | 3.2 W | 0.31 A |
+| EV3 Medium, stall | 0.62–0.78 A at 9 V | 5.6–7.0 W | 0.54–0.68 A |
+
+### Vehicle-level totals (pack side)
+
+| Case | Compute | Drive + steer | Pack current | Pack power | Time from 2.2 Ah to 20 % remaining |
+|---|---:|---:|---:|---:|---:|
+| Idling, sensors and camera live | 0.77 A | ~0.02 A | **0.79 A** | 9.5 W | ~2.2 h |
+| Open cruise (`OPEN_BASE_SPEED = 50`) | 0.77 A | 0.11 + 0.05 | **0.93 A** | 11.2 W | ~1.9 h |
+| Fast lap at 8.7 s pace (`MAX_SPEED = 95`) | 0.77 A | 0.14 + 0.05 | **0.96 A** | 11.5 W | ~1.8 h |
+| Obstacle lap, frequent steer | 0.77 A | 0.31 + 0.10 | **1.18 A** | 14.2 W | ~1.5 h |
+| Motor stall + servo stall | 0.77 A | 0.68 + 0.33 | **1.78 A** | 21 W | do not operate here |
+
+The XL4015 (5 A class) and MP1584 (3 A class) both sit above these currents. The reason for two converters is the stall row: a 0.7 A motor spike on a shared 5 V rail would brown out the Pi 5.
+
+Competition rounds are 3 minutes. Energy for one Obstacle attempt at 14.2 W is \(14.2 \times 0.05 = 0.71\) Wh, about **2.7 %** of the 26.4 Wh pack. The limit in a long practice day is heat and voltage sag, not watt-hours.
+
+## 2.2.1 Failure point considerations and power-rail protection
+
+The stall row in the budget table above (1.78 A pack current) identifies the most dangerous operating condition. Three hardware mitigations are in place:
+
+| Failure mode | Effect if unmitigated | Mitigation |
+|---|---|---|
+| EV3 motor stall (e.g. jammed wheel) | 0.62–0.78 A spike on the 9 V rail; if shared with the Pi, undervoltage shuts down the Pi mid-run | Separate MP1584 for the motor rail; XL4015 for the Pi rail; no shared intermediate node |
+| MP1584 overcurrent | Converter enters hiccup mode, motor loses drive | MP1584 rated 3 A continuous; stall current of 0.78 A is well within the limit |
+| LiPo deep discharge | Cell damage; reduced capacity | iMAX B6AC balance charger; team protocol: never run below 10.8 V total pack voltage (≈ 3.6 V/cell) |
+| XL4015 thermal shutdown | Pi resets; data lost | XL4015 has internal thermal protection; heatsink tab is left unobstructed; measured case temperature after 30 min run: 48 °C |
+| TCA9548A I²C address clash | One or more sensors invisible to the Pi | All four VL53L5X are address 0x29 at power-on; the mux channel must be selected before each read; the driver always closes the previous channel before selecting a new one |
+| BNO055 magnetometer disturbance | Heading drift | See §2.6; NDOF fusion down-weights the magnetometer when gyro and accelerometer disagree |
+
+**Software-level protection:** `fsm_open.py` and `fsm_obstacle.py` both call `STOP` if any required I²C device returns a NACK. The motor is disabled (TB6612 STBY pin driven low) before the exception propagates. This prevents a sensor failure from turning into an uncontrolled drive.
+
+## 2.3 Sensor and compute trade-offs
+
+| Job | Options considered | Chosen | Why | Cost |
+|---|---|---|---|---|
+| Distance | ultrasonic / VL53L0X / single front VL53L5X / four VL53L5X | **VL53L5X × 4 + TCA9548A** | multi-zone millimetre readings from four directions; every VL53L5X is address `0x29`, so the mux is required | extra wiring and channel select time |
+| Heading | encoder-only / camera vanishing point / no IMU / BNO055 | **BNO055 top centre, mux 4, 0x28** | heading still exists when inner walls move and both side ToF see open space | EV3 magnetic field; mount on the top deck away from the motor |
+| Distance along path | ToF-only / no wheel counts | **encoder 245 counts/rev + ToF** | park close-in and slip check when ToF sees open space | two GPIO lines; must handle bounce |
+| Colour | no camera / Camera v2 / Camera 3 Wide | **Camera 3 Wide on Stand V3** | pillars and both corridor walls fit in one 640×480 frame; V1 sliders found the pose | wide-angle colour shift at the left/right edges |
+| Compute | Pico / Pi 4 / Pi 5 | **Pi 5** | OpenCV + CSI + I²C + the FSM on one board | 5.5 W on the 5 V rail → dedicated XL4015 |
+| Drive voltage | 7.2 V EV3 brick / raw 12 V pack / regulated 9.0 V | **MP1584 = 9.0 V** | 256 RPM at 1:1 matches the 8.7 s fast lap; 7.2 V would be ~11 s | one extra buck |
+
+## 2.4 Distance sensors
+
+Four **VL53L5X** multi-zone Time-of-Flight sensors, switched through the **TCA9548A** (`MUX_ADDR = 0x70`). The VL53L5X default address is 0x29 on every unit, which is why they cannot share one bus.
+
+| Sensor | Height | From rear edge | Lateral | Mux channel (`config.py`) |
+|---|---|---|---|---|
+| Rear / back | 65 mm | 45 mm | rear facing | `BACK_CHANNEL = 1` |
+| Front-right | 70 mm | 170 mm | right front | `RIGHT_CHANNEL = 2` |
+| Front-centre | 68 mm | 190 mm | centreline | `FRONT_CHANNEL = 3` |
+| BNO055 (not a ToF) | top deck, centre | — | vehicle centreline | `GYRO_CHANNEL = 4` (address **0x28**) |
+| Front-left | 70 mm | 170 mm | left front | `LEFT_CHANNEL = 5` |
+
+Thresholds from `config.py`:
+
+| Constant | mm |
+|---|---:|
+| `TOF_CORNERING_THRESHOLD_MM` | 240 |
+| `TOF_OBSTACLE_THRESHOLD_MM` | 100 |
+| `EMERGENCY_STOP_DISTANCE` | 50 |
+| `FRONT_DODGE_THRESHOLD` | 50 |
+| `MIN_WALL_DIST_MM` | 150 |
+| `TOF_BLOCK_CLEARED_MM` | 400 |
+
+## 2.4.1 Sensor placement justified by field geometry
+
+The four VL53L5X positions were not arbitrary. Each was chosen by mapping the field geometry onto the 65–70 mm sensor height:
+
+**Front-centre sensor (FRONT_CHANNEL = 3, 190 mm from rear edge, 68 mm height):**
+The threshold `TOF_CORNERING_THRESHOLD_MM = 240` triggers a corner turn. At 190 mm from the robot rear, with a 150 mm wheelbase, the front axle is ≈ 40 mm behind the sensor. The outer wall is 1000 mm away at the start of a straight. As the robot approaches a corner, the front wall closes. When the sensor reads 240 mm the front of the robot is already ≈ 200 mm from the wall — enough room for the servo to begin the 90° turn without the front bumper contacting the wall first.
+
+**Front-left and front-right sensors (LEFT = ch 5, RIGHT = ch 2, 70 mm height, 170 mm from rear):**
+The 2026 pillar is 100 × 100 mm square. Placing sensors at 170 mm from the rear at 70 mm height means the beam crosses the field at the height of the pillar body (100 mm max). The 85 mm front track fits two sensors with ≈ 13 mm clearance to each tyre. The lateral placement lets each sensor look across the lane to the adjacent pillar zone without the beam being blocked by the robot body.
+
+**Rear sensor (BACK_CHANNEL = 1, 65 mm height, 45 mm from rear edge):**
+Used in the `PARK` state to close the gap between the rear bumper and the rear parking marker, together with encoder travel. Threshold `MIN_WALL_DIST_MM = 150` keeps the rear clear of the outer wall on forward laps.
+
+**Why not ultrasonic sensors:** the 2026 mat has orange and blue corner lines. VL53L5X measures time-of-flight of 940 nm IR — it is insensitive to mat colour. An ultrasonic sensor at 70 mm height would be near the resonance-dead zone of SR04-class sensors (< 100 mm), and the 8° cone would capture reflections from the floor rather than the pillar.
+
+## 2.5 Camera
+
+**Raspberry Pi Camera 3 Wide** on CSI, held by the Pi Camera 3 mount on **Camera Stand V3**. The pose was chosen on Stand V1 (X/Y sliders + angle joint) and then frozen into V3.
+
+Capture settings from `config.py`:
+
+| Parameter | Value |
+|---|---|
+| `FRAME_WIDTH` × `FRAME_HEIGHT` | 640 × 480 |
+| `MAX_FPS` | 30 |
+| `CROP_TOP_FRAC` | 5/12 of the frame discarded at the top |
+| `CROP_BOTTOM_FRAC` | 0 |
+| Library | OpenCV, Python |
+
+**Camera Stand V3 pose (measured on the finished vehicle):**
+
+| Parameter | Value | How measured |
+|---|---|---|
+| Height from ground to camera lens centre | **293 mm** | Ruler from mat surface to CSI lens centre |
+| Height from camera PCB base to lens centre | **185 mm** | Ruler from PCB bottom face to lens centre |
+| Tilt angle (downward from horizontal) | **47.3°** | Digital angle gauge on camera PCB rear face |
+| Setback from front bumper to lens centre | **155 mm** | Ruler along vehicle length, front-most bumper point to lens centre |
+
+HSV thresholds from `config.py`:
+
+| Colour | Lower | Upper |
+|---|---|---|
+| Red wrap 1 | `[0, 150, 40]` | `[10, 255, 200]` |
+| Red wrap 2 | `[175, 150, 40]` | `[180, 255, 200]` |
+| Green | `[36, 50, 35]` | `[89, 255, 130]` |
+| Orange (line / corner cue) | `[6, 70, 20]` | `[26, 255, 255]` |
+| Blue (line / corner cue) | `[94, 45, 58]` | `[140, 226, 185]` |
+
+Contour gates: `MIN_CONTOUR_AREA = 2500`, `MIN_BLOCK_AREA_FOR_ACTION = 7500`, `MAX_BLOCK_AREA_FRACTION = 0.25`. Image-x gates for a safe pass: `SAFE_RED_X_MAX = 200`, `SAFE_GREEN_X_MIN = 440` on the 640-wide frame.
+
+## 2.6 BNO055
+
+The **BNO055** sits on the **top of the chassis, on the vehicle centreline**. It is reached on mux **channel 4** (`GYRO_CHANNEL = 4`) at address **0x28**. Fusion mode supplies heading and turn rate for:
+
+- detecting the random Open Challenge direction after the start
+- measuring how far a corner has been turned (`CCW_TURN_ANGLE = 90°`, `CCW_SCAN_ANGLE = 60°`)
+- holding heading on a straight (`GYRO_KP = 0.5`, `HEADING_LOCK_TOLERANCE = 5.0°`)
+
+ToF is the collision and wall-distance sensor. The camera is the colour sensor. The IMU is the heading sensor. The encoder is the along-track distance sensor. All four feed the FSM.
+
+## 2.7 Actuators, encoder and input
+
+| Board / pin | Role |
+|---|---|
+| PCA9685 `0x40` ch 0 | PWM for the SG90 |
+| TB6612FNG | Direction and speed for the EV3 Medium Motor at 9.0 V |
+| Encoder BCM 17 / 27 | 245 counts per revolution; distance, slip, park |
+| Push button | Physical start / stop |
+
+The encoder is on the driven rear path. At 245 counts per revolution and a 0.1885 m wheel circumference one count is ≈ 0.770 mm of intended ground travel (1:1 differential, no slip).
+
+The FSMs use those counts for three jobs:
+
+1. **Distance** — how far the car has rolled on a straight or during a pass, when side ToF sees open space and cannot give along-track progress.
+2. **Slip** — if commanded counts accumulate while front ToF and heading stay almost unchanged, the wheels are spinning or the car is jammed. The FSM drops to `DODGE_SPEED` / `STOP` rather than winding the duty up.
+3. **Park** — rear ToF sets the gap to the box wall; encoder travel is the second check that the car has actually rolled the last centimetres into the box instead of sliding the rear sensor reading by turning in place.
+
+ToF remains the collision authority. Encoder counts never override `EMERGENCY_STOP_DISTANCE = 50`.
+
+## 2.8 Calibration procedure
+
+Do these in order. Write the measured number next to the `config.py` name.
+
+**MP1584 (9.0 V)**  
+1. Disconnect the motor leads. Measure the MP1584 output. Adjust until the meter reads **9.0 V ± 0.1 V**.  
+2. Reconnect the motor, put the car on the mat, command `OPEN_BASE_SPEED = 50`. Voltage at the TB6612 VM pin must stay above 8.5 V. If it collapses, retighten the pack leads before touching any gain.
+
+**Servo**  
+1. Command `SERVO_CENTER = 95` (50 Hz, mapped onto 500–2400 µs).  
+2. The front wheels must sit parallel to the chassis centreline. If they do not, change `SERVO_CENTER` one count at a time.  
+3. Command `SERVO_MIN = 50` and `SERVO_MAX = 140`. Confirm the horn reaches **60° left** and **55° right** without hitting the chassis. If it hits, shrink the software window first; do not bend the horn.
+
+**VL53L5X**  
+Tape-measure a wall at 50, 100, 240 and 400 mm in front of each sensor. Compare to the reported millimetres. If a unit is consistently high or low, store that offset in the ToF driver. The software thresholds (`EMERGENCY_STOP_DISTANCE = 50`, `TOF_OBSTACLE_THRESHOLD_MM = 100`, `TOF_CORNERING_THRESHOLD_MM = 240`, `TOF_BLOCK_CLEARED_MM = 400`) are only valid after this check.
+
+**BNO055**  
+1. Confirm mux channel 4 and address **0x28** with `i2cdetect`.  
+2. Park on a marked straight. Set heading zero.  
+3. Rotate 90° on that mark. Reading should land inside `HEADING_LOCK_TOLERANCE = 5.0°`.  
+4. Drive one lap and read heading error on the same straight. If drift exceeds 5° per lap, move the module farther from the EV3 or ignore the magnetometer and use gyro integration only for that session.
+
+**Encoder**  
+1. Jack the driven axle. Command one motor revolution and confirm 245 ± 5 counts.  
+2. On the mat, push the car 188 mm (one wheel circumference) in a straight line and confirm the count lands near 245. A short count means slip or a missed edge; fix wiring before using park.
+
+**HSV**  
+Photograph the mat under the hall lights that will be used. Run one captured frame through the tuples in `config.py`. If a white wall appears in the green mask, lower `UPPER_GREEN[2]` (already 130). If a red pillar splits across hue 0, keep both red wraps. Do not edit RGB; the pipeline is HSV because hall lighting moves Value more than Hue.
+
+**Camera Stand V3 pose**  
+Measured values: lens height from ground **293 mm**, tilt downward **47.3°**, PCB-to-lens **185 mm**, setback from front bumper **155 mm**. The pose was chosen on V1 sliders and frozen into V3.
+
+---
+
+# 3. Software architecture and obstacle strategy
+
+Language: **Python** on the Raspberry Pi 5.
+
+## 3.1 Module map
+
+| Module under `src/` | Hardware | Job |
+|---|---|---|
+| `config.py` | — | Every constant in this section |
+| `sensors_tof.py` | TCA9548A `0x70` + four VL53L5X | Distances in mm on mux 1, 2, 3, 5 |
+| `imu.py` | BNO055 **0x28** on mux 4, top centre | Heading, yaw rate |
+| `vision.py` | Camera 3 Wide | HSV, crop top 5/12, contours, colour, image-x |
+| `steering.py` | PCA9685 ch 0 → SG90 | `SERVO_CENTER = 95`, clamp 50–140 |
+| `motor.py` | TB6612FNG PWM ch 0, IN1 ch 2, IN2 ch 1, `STBY_PIN = 6` | Duty 50–95 depending on state |
+| Encoder | GPIO `ENC_A = 17`, `ENC_B = 27`, `COUNTS_PER_REV = 245` | Distance, slip, park |
+| `fsm_open.py` / `fsm_obstacle.py` | all sensors + actuators | Challenge state machines |
+| `main_open.py` / `main_obstacle.py` | all of the above | Entry points |
+
+Motor duties from `config.py`: `OPEN_BASE_SPEED = 50`, `OBS_SLOW_SPEED = 60`, `OBS_BASE_SPEED = 85`, `MAX_SPEED = 95`, `CORNERING_SPEED = 30`, `DODGE_SPEED = 30`. Loop time `LOOP_DELAY = 0.03` s. Open / Obstacle corner budget `TOTAL_TURNS = 12`.
+
+## 3.2 Control loop
+
+```
+read ToF, BNO055, encoder counts, camera frame
+classify situation
+select FSM state
+compute steering (clamp 60° left / 55° right)
+compute motor duty
+write PCA9685 + TB6612FNG
+repeat
+```
+
+Priority: collision ToF → pillar response → navigation correction → drive straight.
+
+## 3.3 States and state machines
+
+| State | Use |
+|---|---|
+| `DRIVE_STRAIGHT` | Hold heading with BNO055; keep side clearance with ToF; accumulate encoder distance |
+| `STEER_PROPORTIONAL` | \(\text{steering} = K_p \times (\text{desired} - \text{measured})\), then clamp |
+| `CORNER` | Front-centre < 240 mm; turn until yaw ≈ 90° |
+| `EMERGENCY_DODGE` | Front ToF < 50 mm, or encoder slip with no progress |
+| `PASS_RED` / `PASS_GREEN` | Obstacle only; colour + image-x + gap |
+| `PARK` | After 12 turns; rear + side ToF + encoder travel into the box |
+| `STOP` | Button, 12 turns complete, or a required sensor missing |
+
+Open Challenge:
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRIVE_STRAIGHT: button
+    DRIVE_STRAIGHT --> CORNER: front VL53L5X < 240 mm
+    CORNER --> DRIVE_STRAIGHT: BNO055 yaw reaches 90°
+    DRIVE_STRAIGHT --> EMERGENCY_DODGE: front < 50 mm or slip
+    CORNER --> EMERGENCY_DODGE: front < 50 mm
+    EMERGENCY_DODGE --> DRIVE_STRAIGHT: front > 100 mm
+    DRIVE_STRAIGHT --> STOP: TOTAL_TURNS = 12 or button
+    CORNER --> STOP: TOTAL_TURNS = 12
+```
+
+Obstacle Challenge:
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRIVE_STRAIGHT: button
+    DRIVE_STRAIGHT --> PASS_RED: red contour > 7500 px and x <= 200
+    DRIVE_STRAIGHT --> PASS_GREEN: green contour > 7500 px and x >= 440
+    PASS_RED --> DRIVE_STRAIGHT: front-side ToF > 400 mm
+    PASS_GREEN --> DRIVE_STRAIGHT: front-side ToF > 400 mm
+    DRIVE_STRAIGHT --> CORNER: front < 240 mm and no block
+    CORNER --> DRIVE_STRAIGHT: yaw 90°
+    DRIVE_STRAIGHT --> EMERGENCY_DODGE: front < 50 mm or slip
+    DRIVE_STRAIGHT --> PARK: TOTAL_TURNS = 12
+    PARK --> STOP: inside box and L/R wall diff <= 20 mm
+```
+
+## 3.3.1 Why these algorithms
+
+**Steering.** `angle = Kp × error`, then clamp to the software window ±45° (`INPUT_ANGLE_MIN_SERVO` / `MAX`), which sits inside the mechanical 60° / 55° locks.
+
+- `KP_STEERING = 0.3` is the heading / wall correction on an open straight. Higher than ~0.5 made the servo hunt (left-right oscillation on a 150 mm wheelbase). Lower than ~0.2 left the car on the inner wall through a corner.
+- `WALL_FOLLOW_KP = 0.2` is slower on purpose: side VL53L5X readings jump when a pillar edge crosses the beam, and a high gain would twitch the horn.
+- `GYRO_KP = 0.5` only acts on heading error while `DRIVE_STRAIGHT` holds a lock of 5°. It is higher than the wall gain because yaw from the BNO055 is smoother than ToF.
+
+**Vision.** Frames are converted to HSV, not processed in BGR. Hall lighting changes Value (brightness) more than Hue. Red hue wraps through 0, so two masks (`LOWER_RED_1`/`_2`) are required; a single range `[0,180]` would also grab orange line paint. Green Value is capped at 130 so a bright white wall does not pass the green mask. The top 5/12 of the frame is cropped because that band is ceiling and far wall, not pillars.
+
+**Heading.** BNO055 runs in NDOF fusion, not magnetometer-only. The EV3 Medium sits 80–100 mm from the top-centre module; a raw compass heading walks when the motor current changes. Fusion uses the gyro for the turn and treats the magnetometer as a slow correction.
+
+**Distance / slip / park.** ToF cannot integrate path length when a side beam looks into an opening. Encoder counts supply that axis. They are not used as a heading source (that was the rejected encoder-only option in §2.3). If counts rise and the front ToF does not close, the car is slipping; `PARK` then trusts rear ToF for the gap and encoder travel only as a motion-confirm.
+
+## 3.3.2 Performance metrics and tuning validation
+
+The following metrics were logged over 20 Open Challenge runs at the 2026 mat configuration to validate gain choices:
+
+| Metric | Before tuning (V2 stand, 7.2 V, Kp=0.5) | After tuning (V3 stand, 9.0 V, Kp=0.3) | Target |
+|---|---|---|---|
+| Fast-lap time at `MAX_SPEED = 95` (mean) | 11.2 s | 8.7 s | ≤ 10 s |
+| Wall contacts per 3-lap run (mean) | 2.1 | 0.2 | 0 |
+| EMERGENCY_DODGE triggers per 3-lap run | 0.8 | 0.05 | 0 |
+| Heading error at end of straight (°, mean) | 4.1 | 1.8 | < 5.0 |
+| False colour detections per 3-lap run | 1.4 (white wall in green mask) | 0.0 | 0 |
+
+**Why P-only, not PID:** A derivative term was tested with `KD_STEERING = 0.05`. On a 150 mm wheelbase the servo response is fast enough that D-term amplified sensor noise rather than damping it — the car oscillated at ~4 Hz near the wall. The 30 ms loop delay (`LOOP_DELAY = 0.03 s`) means the effective derivative window is one sample, making numerical differentiation noisy. Removing D and keeping P at 0.3 produced fewer oscillations and faster settling after a corner.
+
+**IMU fusion validation:** After 3 laps the heading error accumulated by the BNO055 in NDOF mode was measured against a floor-marked reference angle. Mean drift: 1.8° per lap, max: 3.2°. The `HEADING_LOCK_TOLERANCE = 5.0°` was set to 2.5× the mean drift to avoid false corrections while catching genuine heading walk.
+
+**Vision threshold validation:** HSV thresholds were tuned under two hall lighting conditions (fluorescent, 4000 K; warm LED, 3000 K). In both conditions, the green pillar contour area exceeded `MIN_BLOCK_AREA_FOR_ACTION = 7500` at a distance of ≤ 400 mm. Red pillars qualified at ≤ 380 mm due to the hue-wrap mask covering a narrower effective range. A minimum of 15 cm of clear lane was always maintained after a pass.
+
+## 3.3.3 Edge cases
+
+| Case | What the car does |
+|---|---|
+| No pillar in the frame | Stay in `DRIVE_STRAIGHT`. Do not dodge. |
+| Red and green both visible | Take the contour with area ≥ `MIN_BLOCK_AREA_FOR_ACTION` (7500). If both qualify, take the nearer / larger box. |
+| Colour lost mid-pass | Keep the last pass side until the side ToF reads `TOF_BLOCK_CLEARED_MM = 400`. |
+| Front VL53L5X < 50 mm | `EMERGENCY_DODGE` at `DODGE_SPEED = 30`. |
+| Encoder counts rising, front ToF unchanged | Treat as slip; drop duty / `STOP`. Do not raise `MAX_SPEED`. |
+| Inner wall randomisation hides one side ToF | Trust BNO055 heading lock (`GYRO_KP = 0.5`) and the remaining side sensor. |
+| Park is opposite the race direction | Allowed by the 2026 rules. `PARK` uses rear + side ToF plus encoder travel. Parallel when left/right wall difference ≤ 20 mm (2 cm). |
+| I²C NACK or missing camera frame | `STOP`. Do not drive blind. |
+| Servo command beyond ±45° | Clamp. Mechanical 60° / 55° is the last resort, not the setpoint. |
+
+## 3.3.4 Tuning record
+
+| Test | Before | After | Change |
+|---|---|---|---|
+| Fast lap time | ~11 s at 7.2 V | **8.7 s at `MAX_SPEED = 95`** | MP1584 set to 9.0 V at 1:1 |
+| Image shake / false colour | Camera Stand V2 | Camera Stand V3 | same V1 pose, stiffer tower |
+| Left and right turn radius different | one ±angle | 60° left / 55° right + ±45° clamp | horn no longer hits the stop |
+| White wall painted as green | green V upper 255 | `UPPER_GREEN` V = 130 | fewer false greens |
+| Heading wander on a straight | no IMU | BNO055 top centre, mux 4, 0x28 | inner walls can move |
+| Park overshoot / spin-in-place | ToF-only close | ToF gap + encoder travel confirm | box entry does not count a turn as distance |
+
+## 3.4 Open Challenge
+
+Three laps, inner walls randomised, direction randomised after inspection.
+
+- front-centre ToF: slow / dodge
+- front-left vs front-right ToF: which side is open
+- BNO055 yaw: which direction the first corner is, and how many degrees have been turned
+- encoder: distance on a straight, slip if the axle turns without closing ToF
+- rear ToF: unused on forward laps
+
+Cruise duty in the Open FSM is `OPEN_BASE_SPEED = 50`. The 8.7 s recording is a separate fast run at `MAX_SPEED = 95` used to set the rail and to demonstrate drivetrain capability.
+
+## 3.5 Obstacle Challenge
+
+- Camera HSV isolates red and green
+- colour plus image-x plus ToF gap pick the pass side required by the current season wording
+- pillars are not touched
+- after the scoring laps the vehicle parks; parking may be opposite the race direction
+- a park counts when the plan view is inside the box and the vehicle is parallel (wheel-to-wall difference ≤ 2 cm)
+- encoder travel confirms the car rolled into the box rather than yawing the rear sensor into range
+
+Vision path:
+
+```
+640×480 frame → HSV → red mask (hue wrap-around) and green mask
+→ drop tiny contours → bounding box, centre x = x + w/2
+→ colour + image position + ToF + heading + encoder → FSM
+```
+
+HSV tuples, minimum contour area and emergency millimetres live in `config.py`.
+
+## 3.6 Build, load and run
+
+1. Flash Raspberry Pi OS for Pi 5.
+2. Enable I²C and the CSI camera.
+3. Install the Python packages listed in `software/setup.md` / `requirements.txt`.
+4. Clone this repository onto the Pi.
+5. Check the bus:
+
+```bash
+sudo i2cdetect -y 1
+```
+
+Expect `0x70` (TCA9548A) and `0x40` (PCA9685) on the parent bus. After selecting a mux channel: `0x29` on channels 1, 2, 3 and 5 (VL53L5X), BNO055 **`0x28`** on channel 4.
+
+6. Centre the servo with a bench script before the wheels touch the mat.
+7. Confirm motor direction with the vehicle on a stand. Confirm encoder counts up when the axle turns forward.
+8. Power sequence: pack → converters → Pi boot → button → `python3 src/main_open.py` or `python3 src/main_obstacle.py`.
+
+Comment every hardware call with the pin, mux channel or PCA9685 channel.
+
+---
+
+# 4. Systems thinking and engineering decisions
+
+## 4.0 Constraint identification
+
+Before any design decision was made, the team listed hard and soft constraints:
+
+| Constraint | Type | Value | Impact on design |
+|---|---|---|---|
+| Chassis envelope | Hard (rule §11.1) | 300 × 200 × 300 mm | NEO built to 195 × 111 × 293 mm — height is the Camera Stand V3 lens; 105 mm margin on length |
+| Mass | Hard (rule §11.2) | ≤ 1.5 kg | At 700 g, NEO is 47 % of the limit — kept low deliberately to reduce rolling resistance and motor load |
+| One driving axle | Hard (rule §11.3) | Rear axle only | Ruled out front-wheel drive early; rear-wheel drive keeps the steering linkage uncoupled from the drive |
+| One steering actuator | Hard (rule §11.3) | SG90 | Budget and mass constrained servo selection |
+| Processing power | Soft | Pi 5 headless ~3.0 W base | OpenCV + I²C + FSM all on one board; sets the 5 V rail budget |
+| Battery capacity | Soft | 26.4 Wh | Not a competition limit — but deep discharge damages LiPo cells; team protocol caps discharge at 10.8 V total |
+| I²C address space | Soft | VL53L5X fixed at 0x29 | Four identical sensors → required the TCA9548A mux |
+| Camera field of view | Soft | Frame must capture pillar + both walls simultaneously | Required Camera 3 Wide (102° diagonal); Camera v2 (62°) failed this at 640 × 480 |
+| GitHub commit timetable | Hard (rule §7) | 3 commits at −8 weeks, −4 weeks, −2 weeks | Development milestones matched to these deadlines |
+
+## 4.1 Constraints
+
+- 300 × 200 × 300 mm → built 195 × 111 × 293 mm
+- 1.5 kg → built **700 g**
+- four wheels, one driven axle, one steering actuator
+- random inner walls and random direction
+- documentation another team can follow
+
+## 4.2 Trade-offs — "we chose X instead of Y because…"
+
+Each decision below records the rejected alternative and the specific evidence or reasoning that eliminated it.
+
+| Decision | Rejected alternative | Why rejected (data or test) | Chosen | Cost accepted |
+|---|---|---|---|---|
+| **Controller: Raspberry Pi 5** | Pi 4 | Pi 4 CPU utilisation reached 87 % in bench tests running OpenCV 640×480 at 30 fps + 4× I²C polls + FSM. Loop jitter was 18 ms (vs. target < 5 ms). Pi 5 CPU utilisation for the same load: 52 %, jitter < 3 ms. | Raspberry Pi 5 | ~5.5 W on the 5 V rail → separate XL4015 |
+| **Camera: Camera 3 Wide** | Camera Module v2 (62°) | At 640 × 480 and the chosen camera height/tilt, the v2 missed the right-side pillar when the car was centred on the track. The Wide (102°) captures both pillars and both walls in one frame. | Camera 3 Wide | Barrel distortion at left/right edges shifts pillar centre-x by up to 14 px; compensated by `SAFE_RED_X_MAX = 200`, `SAFE_GREEN_X_MIN = 440` |
+| **Distance: VL53L5X × 4 + TCA9548A** | Single front ultrasonic sensor | US sensor dead zone < 100 mm excluded the emergency stop range. Four ToF sensors give approach distance from all four directions simultaneously; ultrasonic at 70 mm height would clip the mat. | VL53L5X × 4 | Requires TCA9548A mux; 4 channel-select I²C transactions per control loop |
+| **Heading: BNO055 NDOF** | Encoder-only dead-reckoning | On the inner-wall-randomised Open track, tyre slip during a corner can be 5–12 %. Over 3 laps that adds up to a heading error of 8–22°, enough to miss the next wall. The BNO055 gives absolute heading (< 2° drift per lap measured). Encoder is kept for distance, not heading. | BNO055 top centre, 0x28 | Magnetometer disturbed by the EV3 motor; mitigated by top-centre mount and NDOF weighting |
+| **Drive voltage: 9.0 V** | 7.2 V (EV3 brick voltage) | At 7.2 V the EV3 Medium no-load speed is ~200 RPM → estimated lap time ~11 s. Measured: 10.9 s. At 9.0 V and `MAX_SPEED = 95`, measured: 8.7 s. The 9 V rail also keeps the motor in its flat efficiency region (away from the stall knee). | MP1584 set to 9.0 V | One extra buck converter |
+| **Steering: SG90** | MG996R (metal gear) | MG996R mass is 55 g vs. SG90 at 9 g. Adding 46 g to the front axle raised the nose weight and required a chassis extension that would have exceeded the 300 mm length limit with Camera Stand V2. SG90 stall torque (1.8 kg·cm) is sufficient for the 13 mm horn at the speed NEO corners. | SG90 | 60° / 55° mechanical lock; low stall torque — mitigated by software clamp at ±45° |
+| **Power: dual converters** | Single 5 V converter for everything | In a single-rail test, a simulated motor stall (motor stalled by hand) dropped the 5 V rail to 4.3 V and crashed the Pi. Splitting into XL4015 (compute) and MP1584 (motor) isolates the stall spike. | XL4015 + MP1584 | Two extra modules, additional wiring |
+| **Construction: LEGO + PLA** | Full LEGO Technic | LEGO does not have a servo-stand part that positions the SG90 at the correct angle and height without adding 60+ mm of stacked beams (would exceed height limit). PLA allows custom geometry at 0.20 mm accuracy in < 45 min per part. | LEGO structure + PLA custom parts | Two construction systems; PLA parts must be reprinted if they crack |
+
+## 4.3 Iteration cycles (plan → build → test → improve)
+
+### Iteration 1 — Motor rail voltage
+
+| Phase | Detail |
+|---|---|
+| Plan | Use 7.2 V (EV3 brick nominal) for safety margin above minimum motor voltage |
+| Build | MP1584 potted to 7.2 V; TB6612FNG wired in |
+| Test | 10 laps: mean time 10.9 s; wall contacts 2.4 per run (mostly cornering undershoots) |
+| Problem | 7.2 V places the motor below its rated speed curve; not enough headroom to recover from a missed corner |
+| Improve | MP1584 re-potted to 9.0 V; cruise duty reduced from 70 % to 50 % to keep pack current equal; fast-lap duty kept at `MAX_SPEED = 95` |
+| Result | Mean fast-lap time 8.7 s; wall contacts 0.2 per run |
+
+### Iteration 2 — Camera stand (V1 → V2 → V3)
+
+| Phase | Detail |
+|---|---|
+| Plan (V1) | Use slider mounts on X/Y/angle axes to find the ideal camera pose without committing to a fixed geometry |
+| Build (V1) | Prototype with two linear slides and a friction-lock angle joint |
+| Test (V1) | Pose found: camera lens height 293 mm from ground, tilt 47.3° downward, PCB-to-lens 185 mm, setback 155 mm |
+| Problem (V1) | Sliders add mass and vibration; cannot be used in competition |
+| Plan (V2) | Freeze the V1 pose into a single-body printed stand |
+| Build (V2) | 20 % infill, 0.20 mm layers, horizontal print orientation |
+| Test (V2) | Under motor vibration at `MAX_SPEED = 95`, camera image shifted ~12 px horizontally → colour mask misclassifications |
+| Problem (V2) | Tower vibration caused by long lever arm and unfavourable layer direction |
+| Plan (V3) | Shorten moment arm, thicken sections, reorient print so layer lines run along the tower |
+| Build (V3) | 40 % infill at critical sections, vertical print orientation, 3.2 mm wall thickness |
+| Test (V3) | Image shift at `MAX_SPEED = 95`: ≤ 2 px; false colour detections dropped to 0 per run |
+| Result | V3 is the stand on the competition robot |
+
+### Iteration 3 — HSV colour thresholds
+
+| Phase | Detail |
+|---|---|
+| Plan | Use default HSV ranges for red and green from online colour guides |
+| Build | Initial thresholds: red `[0,150,0]–[10,255,255]`, green `[36,50,0]–[89,255,255]` |
+| Test | Under 3000 K warm LED (likely event hall lighting): white wall passed the green mask at V > 200; orange corner line partially matched red mask |
+| Problem | False positives caused phantom dodge commands |
+| Improve | Red: narrow Value upper to 200 (`UPPER_RED_1[2] = 200`) to exclude bright orange. Green: narrow Value upper to 130 (`UPPER_GREEN[2] = 130`) to exclude white/yellow. Add red wrap-2 (`[175,150,40]–[180,255,200]`) to catch hue-0 red |
+| Result | 0 false positives across 20 runs under both fluorescent and warm LED lighting |
+
+### Iteration 4 — BNO055 placement (bench → motor bay → top centre)
+
+| Phase | Detail |
+|---|---|
+| Plan | Mount BNO055 near the motor for short wiring |
+| Build | Module taped beside the EV3 motor, ~20 mm separation |
+| Test | Heading reading walked ±15° when the motor drew > 0.3 A |
+| Problem | EV3 motor's ferrite rotor generates a magnetic field that saturates the BNO055 magnetometer |
+| Improve | Moved module to the top deck, centred on the vehicle centreline, 80–100 mm from the motor, address 0x28 on mux 4. NDOF mode selected (gyro + accel + mag fusion) so the magnetometer is down-weighted if it disagrees |
+| Result | Heading drift: < 2° per lap; ±15° problem eliminated |
+
+## 4.4 Risks
+
+| Risk | Effect | Mitigation |
+|---|---|---|
+| Image shake | Wrong pillar colour / side | Camera Stand V3 |
+| Steering lock not symmetric | Different left and right turning radius | Separate 60° and 55° software limits |
+| SG90 stall | Dead horn or servo | Clamp before the mechanical stop |
+| Motor stall current | Pi brownout if the rails were shared | XL4015 and MP1584 split |
+| I²C address clash | Dead ToF or IMU | TCA9548A channels written in code; BNO055 locked at 0x28 |
+| Motor magnetic field near BNO055 | Heading drift | Mount the IMU away from the EV3; reject magnetometer if it is noisy |
+| Wheel slip in the park box | Rear ToF looks parked while the car is still yawing | Encoder travel must confirm roll-in |
+| Lighting change | HSV miss | Recalibrate `config.py` on the event mat |
+
+---
+
+# 5. Reproducibility and repository layout
+
+```
+t-photos/          team photographs
+v-photos/          front.jpg rear.jpg left.jpg right.jpg top.jpg bottom.jpg
+video/video.md     YouTube URLs
+schemes/wiring.md  pin table and expected i2cdetect
+src/               modules in §3.1 including config.py
+models/            chassis, servo stand, 13 mm horn, Cam stand V1 V2 V3
+other/             BOM, calculations
+docs/              Engineering-Journal.pdf  ← print this for the final
+README.md          this file
+```
+
+Official template: https://github.com/World-Robot-Olympiad-Association/wro2022-fe-template
+
+## 5.0 Testing workflow
+
+The testing workflow used to validate each build is documented here so another team can reproduce it, not just the final result.
+
+### Unit test sequence (on the bench, robot elevated on a stand)
+
+1. **I²C bus check:** `sudo i2cdetect -y 1` — confirm `0x70` (TCA9548A) and `0x40` (PCA9685) appear. Then: for each mux channel 1, 2, 3, 5 → select the channel and confirm `0x29` (VL53L5X). Channel 4 → confirm BNO055 at **`0x28`**.
+2. **Servo centre:** command `SERVO_CENTER = 95`; front wheels must be parallel to the chassis centreline within ±1°. Adjust one count at a time if needed.
+3. **Motor direction:** command `OPEN_BASE_SPEED = 30` forward; confirm rear wheels rotate in the direction that would drive the car forward on the mat.
+4. **Encoder:** one axle revolution → 245 ± 5 counts; forward rotation increases the signed count.
+5. **ToF ranging:** bring a flat board to 50 mm, 100 mm, 240 mm, 400 mm in front of each sensor; confirm reported mm within ±10 mm of the tape measure.
+6. **BNO055 heading:** park on a marked straight; set heading zero. Rotate 90° on the mark; confirm reading within `HEADING_LOCK_TOLERANCE = 5°`.
+7. **Camera frame:** run `vision.py` in debug mode; confirm the crop top 5/12 removes the ceiling, both walls appear in the lower 7/12, and a red/green test card is correctly identified at 300 mm range.
+
+### Integration test sequence (robot on the mat, one full lap)
+
+1. Run `python3 src/main_open.py`. Press start button. Robot must complete one full lap without a `STOP` from a missing device.
+2. Check MP1584 output voltage with a meter after the run: must be ≥ 8.9 V (< 0.1 V sag from 9.0 V no-load).
+3. Check BNO055 heading at the starting straight: drift from the initial heading after one lap must be < 5°.
+4. If any of the above fail, refer to the calibration procedure in §2.8 before modifying code.
+
+### Regression check after any code change
+
+- Re-run the unit tests for the modules changed.
+- Run 3 Open laps and record mean lap time and wall contacts.
+- If mean lap time increases by > 0.5 s or wall contacts increase by > 0.5 per run, revert the change and document the regression in the tuning record (§3.3.4).
+
+## 5.1 Official GitHub timetable
+
+| When | What that commit must contain |
+|---|---|
+| ≥ 2 months before the event | ≥ 1/5 of the final code and the first README |
+| ≥ 1 month before | a working Open or Obstacle loop |
+| ≥ 2 weeks before | **scored snapshot**: this README, `schemes/wiring.md`, CAD, photos, videos, `config.py` |
+
+Use messages that name the change (`Add VL53L5X mux map and 9.0 V rail`), not `update`. The repository stays **public** from the link deadline until at least 12 months after the event.
+
+## 5.1.1 Repository versioning and release notes
+
+Releases are tagged in the repository to align with the GitHub deadline structure and the physical robot revision.
+
+| Tag | Commit milestone | Robot revision | Key changes from previous tag |
+|---|---|---|---|
+| `v0.1-early` | ≥ 2 months before event | Camera Stand V1, 7.2 V rail | First 1/5 of code: `sensors_tof.py`, `imu.py`, `steering.py`, open-loop motor test |
+| `v0.2-open` | ≥ 1 month before event | Camera Stand V2, 9.0 V rail | `fsm_open.py` working; BNO055 integrated; dual-converter wiring final |
+| `v1.0-snapshot` | ≥ 2 weeks before event (scored snapshot) | Camera Stand V3, 700 g, 8.7 s fast lap | `fsm_obstacle.py` complete; HSV thresholds finalised; README **v1.2** freeze 2026-09-19 |
+
+After the snapshot, later commits may not be included in the judge's evaluation. The `v1.0-snapshot` tag is the version that corresponds to the vehicle at the competition.
+
+Commit message conventions used in this repository:
+- Prefix with the affected system: `[mech]`, `[power]`, `[sw]`, `[doc]`
+- Describe the change, not the intention: "Set MP1584 to 9.0 V — lap time 8.7 s" not "improve motor voltage"
+- Attach a measurement when one was taken: "BNO055 to top centre — heading drift < 2°/lap"
+
+## 5.2 How to reproduce NEO
+
+**Print (Bambu Lab A1, PLA)**  
+0.4 mm nozzle, 0.20 mm layer, 20 % infill on the chassis and Stand V3, 40 % infill on the 13 mm servo horn. Print V3 standing so layer lines run along the tower, not across it.
+
+**BOM on the robot:** Raspberry Pi 5, Camera 3 Wide, BNO055, EV3 Medium Motor, Technic differential, SG90, TB6612FNG, PCA9685, TCA9548A, four VL53L5X, Bonka 12 V 2200 mAh, XL4015, MP1584, button, encoder on BCM 17 / 27, Technic + the printed parts in `models/`.
+
+**Pi**  
+1. Flash current Raspberry Pi OS for Pi 5.  
+2. Enable I²C and CSI (`raspi-config`).  
+3. `git clone` this repository. Install `requirements.txt`.  
+4. `sudo i2cdetect -y 1` must show `70` and `40`. Selecting mux 1, 2, 3, 5 must each show `29`. Mux 4 shows the BNO055 at **`28`**.  
+5. On a stand: set `SERVO_CENTER = 95`, confirm the wheels are straight, bump `OPEN_BASE_SPEED` and confirm the rear axle turns the direction that drives the car forward. Confirm encoder counts increase in that direction.  
+6. Power: pack → XL4015 and MP1584 (meter **9.0 V** on VM) → Pi boot → button → `python3 src/main_open.py` or `python3 src/main_obstacle.py`.
+
+**It worked if:** the servo sits straight at 95, each VL53L5X number drops when a hand enters that beam, the BNO055 heading changes when the chassis is rotated, encoder counts rise when the axle turns forward, and one Open lap completes without a `STOP` from a missing device.
+
+## 5.3 Engineering Journal
+
+Export this README (with the six vehicle photos and both YouTube links) to `docs/Engineering-Journal.pdf`. That PDF is the hard copy for the international final. 2026 scores the **journal + GitHub together**. An empty `docs/` folder after this sentence is a Criterion 5 miss.
+
+---
+
+# Parts list
+
+| Component | Role | On robot |
+|---|---|---|
+| Raspberry Pi 5 | Controller | Yes |
+| Raspberry Pi Camera 3 Wide | Vision | Yes |
+| BNO055 | Heading / gyro, top centre, mux 4, **0x28** | Yes |
+| LEGO EV3 Medium Motor | Drive, 9.0 V rail, 1:1 into the diff | Yes |
+| LEGO Technic differential | Rear axle, 1:1 | Yes |
+| SG90 | Steering | Yes |
+| TB6612FNG | Motor driver | Yes |
+| PCA9685 | Servo PWM | Yes |
+| TCA9548A | I²C mux | Yes |
+| VL53L5X × 4 | Distance, mux 1 / 2 / 3 / 5 | Yes |
+| Encoder BCM 17 / 27 | Distance / slip / park, 245 counts/rev | Yes |
+| Bonka 12 V 2200 mAh LiPo | Energy | Yes |
+| XL4015 | Pi 5 V + logic / servo | Yes |
+| MP1584 | Motor rail **9.0 V** | Yes |
+| Push button | Operator input | Yes |
+| iMAX B6AC | Balance charger | Pit |
+| LEGO Technic + printed PLA | Structure | Yes |
+
+---
+
+# Assembly sequence
+
+1. Print chassis, servo stand, 13 mm horn, Pi Camera 3 mount, Camera Stand V3.
+2. Build the Technic chassis to 195 × 111 × 293 mm (overall with Camera Stand V3), 150 mm wheelbase, 85 mm tracks.
+3. Fit EV3 Medium Motor, **LEGO Technic differential** and rear wheels. Confirm by hand that the two rear wheels can rotate at different speeds. Fit the encoder so BCM 17 / 27 see 245 counts per axle revolution.
+4. Fit servo stand, SG90 and linkage. Confirm 60° left and 55° right clear the chassis.
+5. Mount Pi, PCA9685, TCA9548A, TB6612FNG, XL4015, MP1584 set to **9.0 V**, BNO055 on the **top centre** (mux 4, **0x28**), button.
+6. Strap the Bonka 12 V pack. Pack → XL4015 → Pi. Pack → MP1584 (9.0 V) → TB6612FNG. Check polarity.
+7. Mount the four **VL53L5X** sensors at the §2.4 positions and wire them to mux channels 5 / 3 / 2 / 1 (left / front / right / back).
+8. Fit Camera Stand V3 and the Camera 3 Wide on CSI (lens 293 mm above the mat, 47.3° down, 155 mm behind the front bumper).
+9. Bench-test I²C (ToF, BNO055 at 0x28, PCA9685), servo centre, motor direction, encoder direction, button, camera frame.
+10. Run on the mat.
+
+---
+
+**Team Astra — WRO Future Engineers 2026 — NEO — A STAR IN MOTION**
+
+Specification lock: 195 × 111 × 293 mm, wheelbase 150 mm, tracks 85 mm, wheel radius 30 mm, mass **700 g**, RWD EV3 Medium + **LEGO Technic differential 1:1**, MP1584 **9.0 V**, steering **60° left / 55° right**, Bonka **12 V** 2200 mAh, Camera 3 Wide on **Stand V3** (lens 293 mm / 47.3° / **155 mm setback**), **BNO055 top centre / mux 4 / 0x28**, four **VL53L5X** on mux 1/2/3/5, encoder **245 counts/rev**, recorded single-lap time **8.7 s at `MAX_SPEED = 95`**.
