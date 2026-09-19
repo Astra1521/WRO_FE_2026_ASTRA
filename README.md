@@ -1,4 +1,4 @@
-[README (5).md](https://github.com/user-attachments/files/32411329/README.5.md)
+
 # TEAM ASTRA — WRO FUTURE ENGINEERS 2026
 
 <p align="center">
@@ -114,7 +114,7 @@ All engineering decisions, test results, iteration choices, and documentation in
 | Recorded single-lap time | **8.7 s** at **`MAX_SPEED = 95`** (fast run, not Open cruise) |
 
 <p align="center">
-  <img width="520" alt="NEO" src="https://github.com/user-attachments/assets/5bdba160-a6bc-4c59-a5e1-105b41ca154e" />
+  <img width="520" alt="NEO" src="v-photos/left.png" />
 </p>
 
 ---
@@ -123,13 +123,13 @@ All engineering decisions, test results, iteration choices, and documentation in
 
 | Front | Rear | Left |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/08a80e9d-fb54-4c7f-a078-1f7dcefe13ed" width="280" alt="Front"> | <img src="https://github.com/user-attachments/assets/c562da21-df0f-404e-8824-0cfd6bfd905d" width="280" alt="Rear"> | <img src="https://github.com/user-attachments/assets/da662955-3f9c-422a-923d-9d184cdc3dea" width="280" alt="Left"> |
+| <img src="v-photos/front.png" width="280" alt="Front"> | <img src="v-photos/back.png" width="280" alt="Rear"> | <img src="v-photos/left.png" width="280" alt="Left"> |
 
 | Right | Top | Bottom |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/963cc6fa-45cb-4701-9f0c-07ff7d0bee48" width="280" alt="Right"> | <img src="https://github.com/user-attachments/assets/0baa967b-d792-4137-b402-6e7e74f4cb5b" width="280" alt="Top"> | <img src="https://github.com/user-attachments/assets/d8f873e9-2b76-4520-8104-242555b0fc41" width="280" alt="Bottom"> |
+| <img src="v-photos/right.png" width="280" alt="Right"> | <img src="v-photos/top.png" width="280" alt="Top"> | <img src="v-photos/bottom.png" width="280" alt="Bottom"> |
 
-File copies live in `v-photos/` as `front.jpg`, `rear.jpg`, `left.jpg`, `right.jpg`, `top.jpg`, `bottom.jpg`.
+File copies live in `v-photos/` as `front.png`, `back.png`, `left.png`, `right.png`, `top.png`, `bottom.png`.
 
 ---
 
