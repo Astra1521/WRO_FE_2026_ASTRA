@@ -12,7 +12,6 @@ Public engineering documentation for **Team Astra's** autonomous vehicle **NEO**
 
 This README is the repository entry point. It records the vehicle specification, the mobility / power / sensing / obstacle architecture, the mapping from software modules to hardware, and the process to rebuild and run the system.
 
-**NEO docs v1.2 — 2026-09-19.** Mass 700 g, 195 × 111 × 293 mm, MP1584 9.0 V, Camera Stand V3 (lens 293 mm height, 47.3° tilt, **155 mm setback** from front bumper), BNO055 top centre **0x28** on mux 4, VL53L5X × 4, encoder 245 counts/rev, recorded lap **8.7 s at `MAX_SPEED = 95`**. 
 
 ---
 
