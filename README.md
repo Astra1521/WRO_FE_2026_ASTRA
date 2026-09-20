@@ -1,4 +1,5 @@
 
+
 # TEAM ASTRA — WRO FUTURE ENGINEERS 2026
 
 <p align="center">
@@ -203,8 +204,8 @@ LEGO does not publish an efficiency number for the Technic differential. The los
 
 Combined shaft-to-ground mechanical efficiency after the motor:
 
-- straight, light load: \(0.90 \times 0.90 \times 0.90 \approx 0.73\) (about **25–30 %** of shaft torque lost)
-- corner: \(0.90 \times 0.80 \times 0.90 \approx 0.65\) (about **35 %** of shaft torque lost)
+- straight, light load: 0.90 × 0.90 × 0.90 ≈ 0.73 (about **25–30 %** of shaft torque lost)
+- corner: 0.90 × 0.80 × 0.90 ≈ 0.65 (about **35 %** of shaft torque lost)
 
 Those percentages sit on top of the motor’s own electrical-to-shaft efficiency (Philo: about 34 % at 9 V at the 6.64 N·cm test point). They are not a second copy of that motor loss.
 
@@ -212,21 +213,21 @@ Those percentages sit on top of the motor’s own electrical-to-shaft efficiency
 
 Rolling resistance on a hard mat, rubber tyre:
 
-\[
-F_\text{roll} \approx C_{rr}\,mg
-\]
+```
+F_roll ≈ C_rr × m × g
+```
 
-With \(C_{rr} = 0.03\), \(m = 0.70\,\text{kg}\):
+With C_rr = 0.03, m = 0.70 kg:
 
-\[
-F_\text{roll} \approx 0.03 \times 0.70 \times 9.81 \approx 0.21\,\text{N}
-\]
+```
+F_roll ≈ 0.03 × 0.70 × 9.81 ≈ 0.21 N
+```
 
 Torque at both rear wheels together, 30 mm radius:
 
-\[
-T_\text{roll} = 0.21 \times 0.030 \approx 0.0063\,\text{N·m} = 0.63\,\text{N·cm}
-\]
+```
+T_roll = 0.21 × 0.030 ≈ 0.0063 N·m = 0.63 N·cm
+```
 
 After a 0.73 straight-line drivetrain efficiency the motor only needs about **0.9 N·cm** to hold speed on the flat. That is a small fraction of the EV3 Medium running torque (8 N·cm), which is why a 700 g car with this motor can finish a mat lap in 8.7 s without living near stall.
 
@@ -236,15 +237,15 @@ In a turn the differential planets add loss and the inside tyre scrubs if the 60
 
 Wheel circumference:
 
-\[
-C = 2\pi r = 2\pi(0.030) \approx 0.1885\,\text{m}
-\]
+```
+C = 2π × r = 2π × 0.030 ≈ 0.1885 m
+```
 
 The motor-to-differential presentation is **1:1**. EV3 Medium no-load speed at 9 V is about 250–260 RPM. At that shaft speed the wheels move:
 
-\[
-v \approx \frac{255}{60} \times 0.1885 \approx 0.80\,\text{m/s}
-\]
+```
+v ≈ (255 / 60) × 0.1885 ≈ 0.80 m/s
+```
 
 Distance covered in the recorded **8.7 s** lap is then about **7.0 m**, a tight inside line on the 3000 mm field. That closed loop (9.0 V rail, 1:1, 700 g, `MAX_SPEED = 95`, 8.7 s) is how the motor rail was set.
 
@@ -252,9 +253,9 @@ The 8.7 s figure is a **fast qualifying / capability run** at `MAX_SPEED = 95`. 
 
 Encoder scale used with the same wheel:
 
-\[
-d_\text{count} = \frac{0.1885}{245} \approx 0.770\,\text{mm per count}
-\]
+```
+d_count = 0.1885 / 245 ≈ 0.770 mm per count
+```
 
 ## 1.4.1 Torque margin and mechanical design validation
 
@@ -404,7 +405,7 @@ SG90 and all I²C boards take **5 V logic**. Only the EV3 takes **9.0 V**. Pack 
 |---|---|
 | Pack | Bonka 12 V LiPo |
 | Capacity | 2200 mAh = 2.2 Ah |
-| Stored energy | \(12 \times 2.2 = 26.4\) Wh |
+| Stored energy | 12 × 2.2 = 26.4 Wh |
 | Charger | iMAX B6AC balance charger |
 
 A 3-cell pack sits near 12.6 V off the charger and near 11.1 V nominal. This document uses the team name **12 V Bonka** and the 12 V × 2.2 Ah energy figure.
@@ -423,9 +424,9 @@ Inputs that fix the rail:
 
 Wheel speed implied by that lap on a ~7 m inside line:
 
-\[
-n \approx \frac{7.0 / 8.7}{0.1885} \times 60 \approx 256\,\text{RPM}
-\]
+```
+n ≈ (7.0 / 8.7) / 0.1885 × 60 ≈ 256 RPM
+```
 
 256 RPM at the shaft, light load, 1:1, sits on the EV3 Medium 9 V curve. A 7.2 V rail would top out nearer 200 RPM and would make the same lap ~11 s. A 12 V rail would overspeed the motor past the published 9 V point. **9.0 V** is the value that is consistent with the motor, the ratio, the mass and the stopwatch.
 
@@ -451,9 +452,9 @@ Datasheet / published-bench numbers for the parts on NEO. Converter efficiency: 
 
 Pack current for the holding compute rail:
 
-\[
-I_{\text{pack, compute}} = \frac{8.1}{12 \times 0.88} \approx 0.77\,\text{A}
-\]
+```
+I_pack,compute = 8.1 / (12 × 0.88) ≈ 0.77 A
+```
 
 SG90 jammed (~0.7 A at 5 V, 3.5 W) is a failure case, not a running budget row. It would add about 0.33 A on the pack through the XL4015.
 
@@ -478,7 +479,7 @@ SG90 jammed (~0.7 A at 5 V, 3.5 W) is a failure case, not a running budget row. 
 
 The XL4015 (5 A class) and MP1584 (3 A class) both sit above these currents. The reason for two converters is the stall row: a 0.7 A motor spike on a shared 5 V rail would brown out the Pi 5.
 
-Competition rounds are 3 minutes. Energy for one Obstacle attempt at 14.2 W is \(14.2 \times 0.05 = 0.71\) Wh, about **2.7 %** of the 26.4 Wh pack. The limit in a long practice day is heat and voltage sag, not watt-hours.
+Competition rounds are 3 minutes. Energy for one Obstacle attempt at 14.2 W is 14.2 × 0.05 = 0.71 Wh, about **2.7 %** of the 26.4 Wh pack. The limit in a long practice day is heat and voltage sag, not watt-hours.
 
 ## 2.2.1 Failure point considerations and power-rail protection
 
@@ -681,7 +682,7 @@ Priority: collision ToF → pillar response → navigation correction → drive 
 | State | Use |
 |---|---|
 | `DRIVE_STRAIGHT` | Hold heading with BNO055; keep side clearance with ToF; accumulate encoder distance |
-| `STEER_PROPORTIONAL` | \(\text{steering} = K_p \times (\text{desired} - \text{measured})\), then clamp |
+| `STEER_PROPORTIONAL` | steering = Kp × (desired − measured), then clamp |
 | `CORNER` | Front-centre < 240 mm; turn until yaw ≈ 90° |
 | `EMERGENCY_DODGE` | Front ToF < 50 mm, or encoder slip with no progress |
 | `PASS_RED` / `PASS_GREEN` | Obstacle only; colour + image-x + gap |
