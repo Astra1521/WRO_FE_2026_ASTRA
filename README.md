@@ -12,22 +12,6 @@ Public engineering documentation for **Team Astra's** autonomous vehicle **NEO**
 
 This README is the repository entry point. It records the vehicle specification, the mobility / power / sensing / obstacle architecture, the mapping from software modules to hardware, and the process to rebuild and run the system.
 
-
----
-
-## Rule compliance
-
-| Rule | Limit | NEO |
-|---|---|---|
-| Length × width × height | ≤ 300 × 200 × 300 mm | **195 × 111 × 293 mm** |
-| Mass | ≤ 1.5 kg | **700 g (0.70 kg)** |
-| Wheels | 4 wheels | 4 wheels, 30 mm radius |
-| Drive | one driving axle | rear axle, rear-wheel drive |
-| Steering | one steering actuator | SG90 micro servo on the front wheels |
-| Control | fully autonomous | Raspberry Pi 5 |
-
-The outline of the vehicle does not change during a round.
-
 ---
 
 ## Team Astra
@@ -57,7 +41,7 @@ In accordance with WRO Ethics Code and the spirit of the Future Engineers catego
 |---|---|
 | Mechanical design and assembly | **None.** All chassis geometry, component selection, mount design, and iteration decisions were made entirely by the team. |
 | Electrical design and wiring | **None.** Power architecture, sensor placement, wiring, and the power budget were designed and calculated by the team. |
-| Software architecture and algorithms | **None.** The FSM structure, control algorithms, HSV thresholds, and all tuning decisions were developed, tested, and iterated by the team. |
+| Software architecture and algorithms | **Minimal.** The FSM structure, control algorithms, HSV thresholds, and all tuning decisions were developed, tested, and iterated by the team. |
 | Engineering documentation | **None.** This README, all analysis, all tables, and the Engineering Journal were written by the team. |
 | Code proofreading and debugging | **Minimal.** AI tools (specifically GitHub Copilot and ChatGPT) were occasionally used to assist with identifying syntax errors and reviewing specific code sections for bugs. No AI tool generated logic, algorithms, or architectural decisions. Final code is the team's own work. |
 
