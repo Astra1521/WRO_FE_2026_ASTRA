@@ -1,5 +1,3 @@
-
-
 # TEAM ASTRA — WRO FUTURE ENGINEERS 2026
 
 <p align="center">
@@ -29,7 +27,7 @@ This README is the repository entry point. It records the vehicle specification,
   <img width="480" alt="Team photo 2" src="https://github.com/user-attachments/assets/9ce060ad-fa69-4f17-b778-96658c0b2662" />
 </p>
 
-Store the official and informal team photographs in `t-photos/`.
+Team photographs are in `t-photos/`.
 
 ---
 
@@ -45,7 +43,7 @@ In accordance with WRO Ethics Code and the spirit of the Future Engineers catego
 | Engineering documentation | **None.** This README, all analysis, all tables, and the Engineering Journal were written by the team. |
 | Code proofreading and debugging | **Minimal.** AI tools (specifically GitHub Copilot and ChatGPT) were occasionally used to assist with identifying syntax errors and reviewing specific code sections for bugs. No AI tool generated logic, algorithms, or architectural decisions. Final code is the team's own work. |
 
-All engineering decisions, test results, iteration choices, and documentation in this repository represent the team's independent work. AI was not used to design, build, or document the robot — only to support basic code review in the same way a spell-checker supports writing.
+All engineering decisions, test results, iteration choices, and documentation in this repository represent the team's independent work. AI was used only for occasional syntax checking and code review — equivalent to a spell-checker — and was not involved in any design, algorithmic, or documentation decisions.
 
 ---
 
@@ -96,26 +94,26 @@ All engineering decisions, test results, iteration choices, and documentation in
 | Recorded single-lap time | **8.7 s** at **`MAX_SPEED = 95`** (fast run, not Open cruise) |
 
 <p align="center">
-  <img width="520" alt="NEO" src="v-photos/left.png" />
+  <img width="520" alt="NEO" src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/left_upd.png?raw=true" />
 </p>
 
 ---
 
-## Vehicle photographs (required)
+## Vehicle photographs
 
 | Front | Rear | Left |
 |:---:|:---:|:---:|
-| <img src="v-photos/front.png" width="280" alt="Front"> | <img src="v-photos/back.png" width="280" alt="Rear"> | <img src="v-photos/left.png" width="280" alt="Left"> |
+| <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/front_upd2.png?raw=true" width="280" alt="Front"> | <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/back_upd.png?raw=true" width="280" alt="Rear"> | <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/left_upd.png?raw=true" width="280" alt="Left"> |
 
 | Right | Top | Bottom |
 |:---:|:---:|:---:|
-| <img src="v-photos/right.png" width="280" alt="Right"> | <img src="v-photos/top.png" width="280" alt="Top"> | <img src="v-photos/bottom.png" width="280" alt="Bottom"> |
+| <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/right_upd.png?raw=true" width="280" alt="Right"> | <img src="v-photos/top.png" width="280" alt="Top"> | <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/bottom_upd.png?raw=true" width="280" alt="Bottom"> |
 
-File copies live in `v-photos/` as `front.png`, `back.png`, `left.png`, `right.png`, `top.png`, `bottom.png`.
+File copies live in `v-photos/`. All photos except the top view were upscaled using AI upscaling software — the originals were taken with a low-resolution camera and were too blurry to show component-level detail clearly.
 
 ---
 
-## Performance videos (required)
+## Performance videos
 
 One YouTube video per challenge. Autonomous driving in each clip is the official demonstration.
 
