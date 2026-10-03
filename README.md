@@ -119,6 +119,7 @@ One YouTube video per challenge. Autonomous driving in each clip is the official
 
 | Challenge | Link |
 |---|---|
+| Team Astra | https://youtu.be/iWHfzkOTq00|
 | Open Challenge | https://youtu.be/b3JmTygBYIU |
 | Obstacle Challenge | https://youtu.be/H_eWYqw8Qmo |
 
