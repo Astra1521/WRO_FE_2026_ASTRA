@@ -109,7 +109,7 @@ All engineering decisions, test results, iteration choices, and documentation in
 |:---:|:---:|:---:|
 | <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/right_upd.png?raw=true" width="280" alt="Right"> | <img src="v-photos/top.png" width="280" alt="Top"> | <img src="https://github.com/Astra1521/WRO_FE_2026_ASTRA/blob/54676800182d9fb75285a4b180c55afeff86f2b8/v-photos/bottom_upd.png?raw=true" width="280" alt="Bottom"> |
 
-File copies live in `v-photos/`. All photos except the top view were upscaled using AI upscaling software — the originals were taken with a low-resolution camera and were too blurry to show component-level detail clearly.
+File copies live in `v-photos/`. All photos except the top view were upscaled using AI upscaling software — the originals were taken with a low-resolution camera and were too blurry to show component-level detail clearly
 
 ---
 
